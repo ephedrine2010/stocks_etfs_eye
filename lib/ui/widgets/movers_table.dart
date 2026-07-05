@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_table_view/material_table_view.dart';
 
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import 'common.dart';
@@ -11,11 +12,10 @@ class MoversTable extends StatelessWidget {
   final List<Mover> movers;
   const MoversTable({super.key, required this.movers});
 
-  static const _headers = ['Ticker', 'Company', 'Chg'];
-
   @override
   Widget build(BuildContext context) {
     if (movers.isEmpty) return const SizedBox.shrink();
+    final headers = context.s.moversHeaders;
     return AppTable(
       rowCount: movers.length,
       columns: const [
@@ -23,7 +23,7 @@ class MoversTable extends StatelessWidget {
         TableColumn(width: 120, flex: 1),
         TableColumn(width: 64),
       ],
-      headerCell: (c) => TableHeaderText(_headers[c]),
+      headerCell: (c) => TableHeaderText(headers[c]),
       cell: (row, col) {
         final m = movers[row];
         return switch (col) {

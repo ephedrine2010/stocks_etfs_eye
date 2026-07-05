@@ -3,6 +3,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:material_table_view/material_table_view.dart';
 
 import '../../app/format.dart';
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import 'common.dart';
@@ -59,7 +60,6 @@ class _ScreenerTableState extends State<ScreenerTable> {
   String _query = '';
   String? _marketId; // null ⇒ all markets
 
-  static const _headers = ['Mkt', 'Ticker', 'Company', 'Price', 'Chg', 'Div'];
   static const _sortForCol = [
     _SortKey.market,
     _SortKey.ticker,
@@ -170,10 +170,10 @@ class _ScreenerTableState extends State<ScreenerTable> {
       children: [
         Row(
           children: [
-            const Expanded(child: SectionLabel('Screener · all markets')),
+            Expanded(child: SectionLabel(context.s.screenerTitle)),
             const SizedBox(width: 8),
             Text(
-              '${rows.length} instruments',
+              context.s.instruments(rows.length),
               style: const TextStyle(fontSize: 11, color: AppColors.ink3),
             ),
           ],
@@ -182,20 +182,19 @@ class _ScreenerTableState extends State<ScreenerTable> {
         _controls(),
         const SizedBox(height: 12),
         if (rows.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 18),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18),
             child: Text(
-              'No instruments match these filters.',
-              style: TextStyle(fontSize: 12.5, color: AppColors.ink3),
+              context.s.noMatches,
+              style: const TextStyle(fontSize: 12.5, color: AppColors.ink3),
             ),
           )
         else
-          _table(rows),
+          _table(rows, context.s.screenerHeaders),
         const SizedBox(height: 10),
-        const Text(
-          'Ranks the live movers & leaders already fetched per market. '
-          'Tap a column to sort. Not investment advice.',
-          style: TextStyle(fontSize: 11, color: AppColors.ink3, height: 1.5),
+        Text(
+          context.s.screenerNote,
+          style: const TextStyle(fontSize: 11, color: AppColors.ink3, height: 1.5),
         ),
       ],
     );
@@ -209,18 +208,18 @@ class _ScreenerTableState extends State<ScreenerTable> {
       children: [
         // Gain/loss filter.
         _Pill(
-          label: 'All',
+          label: context.s.filterAll,
           active: _filter == _Filter.all,
           onTap: () => setState(() => _filter = _Filter.all),
         ),
         _Pill(
-          label: 'Gainers',
+          label: context.s.filterGainers,
           active: _filter == _Filter.gainers,
           activeColor: AppColors.gain,
           onTap: () => setState(() => _filter = _Filter.gainers),
         ),
         _Pill(
-          label: 'Losers',
+          label: context.s.filterLosers,
           active: _filter == _Filter.losers,
           activeColor: AppColors.loss,
           onTap: () => setState(() => _filter = _Filter.losers),
@@ -228,7 +227,7 @@ class _ScreenerTableState extends State<ScreenerTable> {
         const _Sep(),
         // Market filter.
         _Pill(
-          label: '🌐 All',
+          label: context.s.allMarkets,
           active: _marketId == null,
           onTap: () => setState(() => _marketId = null),
         ),
@@ -250,7 +249,7 @@ class _ScreenerTableState extends State<ScreenerTable> {
               cursorColor: AppColors.accent,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: 'Search ticker / name',
+                hintText: context.s.searchHint,
                 hintStyle: const TextStyle(fontSize: 12, color: AppColors.ink3),
                 prefixIcon: const Icon(TablerIcons.search,
                     size: 15, color: AppColors.ink3),
@@ -275,7 +274,7 @@ class _ScreenerTableState extends State<ScreenerTable> {
     );
   }
 
-  Widget _table(List<_Row> rows) {
+  Widget _table(List<_Row> rows, List<String> headers) {
     return AppTable(
       rowCount: rows.length,
       columns: const [
@@ -286,12 +285,14 @@ class _ScreenerTableState extends State<ScreenerTable> {
         TableColumn(width: 64),
         TableColumn(width: 66),
       ],
-      headerCell: _headerCell,
+      // Headers are resolved in build (a valid context.watch site) and passed
+      // in — this callback runs later, during the table's own build.
+      headerCell: (col) => _headerCell(col, headers),
       cell: (row, col) => _bodyCell(rows[row], col),
     );
   }
 
-  Widget _headerCell(int col) {
+  Widget _headerCell(int col, List<String> headers) {
     final key = _sortForCol[col];
     final active = key == _sortKey;
     return MouseRegion(
@@ -303,7 +304,7 @@ class _ScreenerTableState extends State<ScreenerTable> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
-              child: TableHeaderText(_headers[col]),
+              child: TableHeaderText(headers[col]),
             ),
             if (active) ...[
               const SizedBox(width: 2),

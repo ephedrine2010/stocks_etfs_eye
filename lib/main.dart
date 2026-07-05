@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/config.dart';
 import 'app/data_policy.dart';
@@ -7,6 +8,7 @@ import 'app/env.dart';
 import 'app/theme.dart';
 import 'cubit/clock_cubit.dart';
 import 'cubit/dashboard_cubit.dart';
+import 'cubit/locale_cubit.dart';
 import 'cubit/selection_cubit.dart';
 import 'data/repository/dashboard_repository.dart';
 import 'data/repository/market_hours.dart';
@@ -23,7 +25,12 @@ Future<void> main() async {
   final hasDirectKey = deepSeekKey != null && deepSeekKey.isNotEmpty;
   final finnhubKey = env['FINNHUB_API_KEY'];
 
+  // Restore the last-chosen language before the first frame (no wrong-direction
+  // flash). No-op default of English on any platform without a saved value.
+  final locale = await LocaleCubit.load();
+
   runApp(StocksEyeApp(
+    initialLocale: locale,
     repository: DashboardRepository(
       policy: DataPolicy(
         proxyBaseUrl: AppConfig.proxyUrl,
@@ -39,7 +46,14 @@ class StocksEyeApp extends StatelessWidget {
   /// Injectable so tests can supply an offline (mock-only) repository.
   final DashboardRepository repository;
 
-  const StocksEyeApp({super.key, this.repository = const DashboardRepository()});
+  /// The language to open in; restored from prefs in [main]. Defaults English.
+  final Locale initialLocale;
+
+  const StocksEyeApp({
+    super.key,
+    this.repository = const DashboardRepository(),
+    this.initialLocale = LocaleCubit.en,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +67,25 @@ class StocksEyeApp extends StatelessWidget {
           ),
           BlocProvider(create: (_) => ClockCubit()),
           BlocProvider(create: (_) => SelectionCubit()),
+          BlocProvider(create: (_) => LocaleCubit(initialLocale)),
         ],
-        child: MaterialApp(
-          title: 'Stocks Eye',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.dark,
-          home: const DashboardPage(),
+        // Rebuild the whole app when the language flips — this drives the
+        // MaterialApp locale, which in turn flips Directionality (LTR ⇄ RTL)
+        // for the entire tree.
+        child: BlocBuilder<LocaleCubit, Locale>(
+          builder: (context, locale) => MaterialApp(
+            title: 'Stocks Eye',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.dark,
+            locale: locale,
+            supportedLocales: const [LocaleCubit.en, LocaleCubit.ar],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: const DashboardPage(),
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../app/i18n.dart';
 import '../app/theme.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/selection_cubit.dart';
@@ -61,7 +62,7 @@ class _Content extends StatelessWidget {
               if (dashboard.brief != null)
                 BriefCard(brief: dashboard.brief!, asOf: dashboard.asOf),
               const SizedBox(height: 28),
-              const SectionLabel('Markets — live status'),
+              SectionLabel(context.s.marketsStatus),
               const SizedBox(height: 12),
               BlocBuilder<SelectionCubit, String?>(
                 builder: (context, selectedId) => MarketGrid(
@@ -104,14 +105,13 @@ class _DetailAndWatchlist extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionLabel('Watchlist · normalized to USD'),
+          SectionLabel(context.s.watchlistTitle),
           const SizedBox(height: 14),
           WatchlistTable(rows: dashboard.watchlist),
           const SizedBox(height: 12),
-          const Text(
-            'Native currency shown with USD conversion beside it. FX rates are '
-            'approximate (static) until a live FX source is wired.',
-            style: TextStyle(fontSize: 11, color: AppColors.ink3),
+          Text(
+            context.s.watchlistNote,
+            style: const TextStyle(fontSize: 11, color: AppColors.ink3),
           ),
         ],
       ),
@@ -157,11 +157,9 @@ class _Footer extends StatelessWidget {
   const _Footer();
 
   @override
-  Widget build(BuildContext context) => const Text(
-    'Trading hours & weekends are per-market: KSA & Egypt trade Sun–Thu; USA, '
-    'China & UAE trade Mon–Fri, China with a midday break. Gold ~24h Mon–Fri; '
-    'Crypto is 24/7/365. Open/closed is computed live from your device clock.',
-    style: TextStyle(fontSize: 11, color: AppColors.ink3, height: 1.5),
+  Widget build(BuildContext context) => Text(
+    context.s.footer,
+    style: const TextStyle(fontSize: 11, color: AppColors.ink3, height: 1.5),
   );
 }
 
@@ -174,14 +172,14 @@ class _ErrorView extends StatelessWidget {
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Failed to load dashboard',
-            style: TextStyle(color: AppColors.ink, fontSize: 16)),
+        Text(context.s.failedToLoad,
+            style: const TextStyle(color: AppColors.ink, fontSize: 16)),
         const SizedBox(height: 8),
         Text(message, style: const TextStyle(color: AppColors.ink3)),
         const SizedBox(height: 16),
         FilledButton(
           onPressed: () => context.read<DashboardCubit>().load(),
-          child: const Text('Retry'),
+          child: Text(context.s.retry),
         ),
       ],
     ),

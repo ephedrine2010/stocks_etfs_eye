@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import '../../app/format.dart';
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/market_hours.dart';
@@ -18,42 +19,43 @@ class DetailPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = context.s;
     final open = MarketHours.isOpen(market.schedule);
     final change = market.quote.changePct;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _header(open, change),
+        _header(s, open, change),
         const SizedBox(height: 16),
         Sparkline(data: market.spark, changePct: change, height: 90),
         if (market.leaders.isNotEmpty) ...[
           const SizedBox(height: 16),
-          SectionLabel('Leading stocks · ${market.currency}'),
+          SectionLabel(s.leadingStocks(market.currency)),
           const SizedBox(height: 6),
           LeadersTable(leaders: market.leaders),
         ],
         if (market.take != null) ...[
           const SizedBox(height: 16),
-          _TakeBlock(name: market.name, take: market.take!),
+          _TakeBlock(name: market.nameFor(s.ar), take: market.take!),
         ],
         const SizedBox(height: 16),
-        const SectionLabel('Top movers · session'),
+        SectionLabel(s.topMovers),
         const SizedBox(height: 6),
         MoversTable(movers: market.movers),
         const SizedBox(height: 18),
-        const SectionLabel('Latest · news & sentiment'),
+        SectionLabel(s.latestNews),
         const SizedBox(height: 6),
         ...market.news.map((n) => _NewsRow(n)),
         const SizedBox(height: 12),
-        const Text(
-          'Headlines and sentiment are informational only — not investment advice.',
-          style: TextStyle(fontSize: 11, color: AppColors.ink3),
+        Text(
+          s.newsDisclaimer,
+          style: const TextStyle(fontSize: 11, color: AppColors.ink3),
         ),
       ],
     );
   }
 
-  Widget _header(bool open, double change) => Row(
+  Widget _header(Strings s, bool open, double change) => Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(market.flag, style: const TextStyle(fontSize: 26)),
@@ -72,8 +74,8 @@ class DetailPanel extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             InfoChip(
-              '${market.name} · ${market.city} · '
-              '${open ? 'Open now' : 'Closed'} · ${market.quote.source}',
+              '${market.nameFor(s.ar)} · ${market.cityFor(s.ar)} · '
+              '${open ? s.openNow : s.closedNow} · ${market.quote.source}',
             ),
           ],
         ),
@@ -104,6 +106,7 @@ class _TakeBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = context.s;
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -120,7 +123,7 @@ class _TakeBlock extends StatelessWidget {
               const SizedBox(width: 7),
               Expanded(
                 child: Text(
-                  'AI Take · $name',
+                  s.aiTake(name),
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 12,
@@ -130,7 +133,7 @@ class _TakeBlock extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              _sentTag(take.sentiment),
+              _sentTag(s, take.sentiment),
             ],
           ),
           const SizedBox(height: 10),
@@ -149,9 +152,9 @@ class _TakeBlock extends StatelessWidget {
               runSpacing: 6,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Text('SOURCES', style: AppText.label.copyWith(fontSize: 10)),
+                Text(s.sources, style: AppText.label.copyWith(fontSize: 10)),
                 for (final c in take.citations) InfoChip(c),
-                const InfoChip('+ web'),
+                InfoChip(s.plusWeb),
               ],
             ),
           ],
@@ -160,23 +163,23 @@ class _TakeBlock extends StatelessWidget {
     );
   }
 
-  Widget _sentTag(Sentiment s) => Container(
+  Widget _sentTag(Strings str, Sentiment sent) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(
-      color: s.color.withValues(alpha: 0.12),
+      color: sent.color.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(99),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(s.icon, size: 12, color: s.color),
+        Icon(sent.icon, size: 12, color: sent.color),
         const SizedBox(width: 4),
         Text(
-          s.label,
+          str.sentiment(sent),
           style: TextStyle(
             fontSize: 10.5,
             fontWeight: FontWeight.w600,
-            color: s.color,
+            color: sent.color,
           ),
         ),
       ],
@@ -190,10 +193,11 @@ class _NewsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = context.s;
     final meta = [
-      item.sentiment.label,
+      s.sentiment(item.sentiment),
       item.source,
-      if (item.published != null) '${item.published} ago',
+      if (item.published != null) s.ago(item.published!),
     ].join(' · ');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7),

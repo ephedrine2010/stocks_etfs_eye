@@ -159,19 +159,27 @@ const List<WatchRow> _watchlist = [
 ];
 
 final Brief _brief = Brief(
-  lead:
-      "Global risk appetite is firmer heading into the session. US futures point higher as Treasury yields cool, Gulf markets open steady with Aramco in focus, and crypto extends its rally on renewed spot-ETF inflows. Gold holds its range ahead of today's US inflation print.",
+  lead: const LocalizedText(
+    en:
+        "Global risk appetite is firmer heading into the session. US futures point higher as Treasury yields cool, Gulf markets open steady with Aramco in focus, and crypto extends its rally on renewed spot-ETF inflows. Gold holds its range ahead of today's US inflation print.",
+    ar:
+        'شهية المخاطرة العالمية أكثر تماسكًا مع بداية الجلسة. العقود الأمريكية الآجلة تشير إلى الصعود مع تراجع عوائد السندات، وأسواق الخليج تفتح مستقرة مع التركيز على أرامكو، والعملات الرقمية تواصل صعودها بفعل تدفقات صناديق المؤشرات الفورية. الذهب يحافظ على نطاقه قبل بيانات التضخم الأمريكية اليوم.',
+  ),
   lines: const [
-    BriefLine(id: 'us', flag: '🇺🇸', name: 'USA', sentiment: Sentiment.bull, text: 'Futures firmer; megacap tech leads pre-market.'),
-    BriefLine(id: 'sa', flag: '🇸🇦', name: 'KSA', sentiment: Sentiment.neut, text: 'TASI flat to open; banks & Aramco steady.'),
-    BriefLine(id: 'ae', flag: '🇦🇪', name: 'UAE', sentiment: Sentiment.bull, text: 'Dubai property strength supports DFM.'),
-    BriefLine(id: 'eg', flag: '🇪🇬', name: 'Egypt', sentiment: Sentiment.bull, text: 'EGX 30 buoyed by foreign inflows into CIB.'),
-    BriefLine(id: 'cn', flag: '🇨🇳', name: 'China', sentiment: Sentiment.bear, text: 'Mainland soft on property drag; stimulus watch.'),
-    BriefLine(id: 'au', flag: '🥇', name: 'Gold', sentiment: Sentiment.neut, text: 'Range-bound; awaiting US CPI at 13:30 GMT.'),
-    BriefLine(id: 'cr', flag: '🪙', name: 'Crypto', sentiment: Sentiment.bull, text: 'BTC & ETH extend gains on ETF inflows.'),
+    BriefLine(id: 'us', flag: '🇺🇸', name: 'USA', sentiment: Sentiment.bull, text: LocalizedText(en: 'Futures firmer; megacap tech leads pre-market.', ar: 'العقود الآجلة أقوى؛ أسهم التقنية الكبرى تتصدر قبل الافتتاح.')),
+    BriefLine(id: 'sa', flag: '🇸🇦', name: 'KSA', sentiment: Sentiment.neut, text: LocalizedText(en: 'TASI flat to open; banks & Aramco steady.', ar: 'تاسي يفتح مستقرًا؛ البنوك وأرامكو ثابتة.')),
+    BriefLine(id: 'ae', flag: '🇦🇪', name: 'UAE', sentiment: Sentiment.bull, text: LocalizedText(en: 'Dubai property strength supports DFM.', ar: 'قوة قطاع العقار في دبي تدعم سوق دبي المالي.')),
+    BriefLine(id: 'eg', flag: '🇪🇬', name: 'Egypt', sentiment: Sentiment.bull, text: LocalizedText(en: 'EGX 30 buoyed by foreign inflows into CIB.', ar: 'مؤشر EGX 30 مدعوم بتدفقات أجنبية على البنك التجاري الدولي.')),
+    BriefLine(id: 'cn', flag: '🇨🇳', name: 'China', sentiment: Sentiment.bear, text: LocalizedText(en: 'Mainland soft on property drag; stimulus watch.', ar: 'الأسهم الصينية ضعيفة بفعل ضغط العقار؛ ترقب للتحفيز.')),
+    BriefLine(id: 'au', flag: '🥇', name: 'Gold', sentiment: Sentiment.neut, text: LocalizedText(en: 'Range-bound; awaiting US CPI at 13:30 GMT.', ar: 'ضمن نطاق محدود؛ بانتظار بيانات التضخم الأمريكية 13:30 غرينتش.')),
+    BriefLine(id: 'cr', flag: '🪙', name: 'Crypto', sentiment: Sentiment.bull, text: LocalizedText(en: 'BTC & ETH extend gains on ETF inflows.', ar: 'بيتكوين وإيثريوم يواصلان المكاسب بفعل تدفقات الصناديق.')),
   ],
-  hint:
-      'Tone is risk-on but data-dependent — US inflation (13:30 GMT) is the common swing factor for gold, crypto, and rate-sensitive megacaps alike. Worth watching before repositioning.',
+  hint: const LocalizedText(
+    en:
+        'Tone is risk-on but data-dependent — US inflation (13:30 GMT) is the common swing factor for gold, crypto, and rate-sensitive megacaps alike. Worth watching before repositioning.',
+    ar:
+        'المزاج مائل للمخاطرة لكنه رهن البيانات — التضخم الأمريكي (13:30 غرينتش) هو العامل المحوري المشترك للذهب والعملات الرقمية والأسهم الكبرى الحساسة للفائدة. يستحق المتابعة قبل إعادة التموضع.',
+  ),
   citations: const ['Reuters', 'Bloomberg', 'Argaam', 'Kitco', 'CoinDesk'],
   source: 'mock',
   asOf: DateTime.now(),
