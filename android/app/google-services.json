@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1049316374463",
+    "project_id": "stocketfseye",
+    "storage_bucket": "stocketfseye.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049316374463:android:d4abb6fe99ba3b4625d30a",
+        "android_client_info": {
+          "package_name": "com.example.stocks_etfs_eye"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMES1rWstGJJrGC4EI0ItI5_yLtLC9NEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

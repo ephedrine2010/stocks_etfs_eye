@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/config.dart';
+import 'firebase_options.dart';
 import 'app/data_policy.dart';
 import 'app/env.dart';
 import 'app/theme.dart';
@@ -17,6 +19,16 @@ import 'ui/dashboard_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MarketHours.ensureInitialized();
+
+  // Firebase — bring up before the first frame. Fail soft: a Firebase hiccup
+  // must never block the dashboard (mirrors the repository's fallback ethos).
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (_) {
+    // Optional at boot; the dashboard runs fine without Firebase.
+  }
 
   // Load a local .env (desktop/mobile). If it carries a DeepSeek key, the app
   // does live AI DIRECTLY — no proxy needed. On Web this is a no-op.
