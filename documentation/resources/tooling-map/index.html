@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock &amp; ETF Analysis — Tooling Map</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="page" class="mode-en">
+<div class="wrap">
+
+  <div class="term">
+    <div class="term-bar">
+      <span class="dot on"></span><span class="dot"></span><span class="dot"></span>
+      <span>stocks_eye // analysis-tooling.map</span>
+      <span class="spacer"></span>
+      <button id="langToggle" class="langbtn" type="button" aria-label="Switch to Arabic">
+        <span class="glyph" aria-hidden="true">⇄</span>
+        <span class="l-en ar" lang="ar">عربي</span>
+        <span class="l-ar" lang="en">English</span>
+      </button>
+    </div>
+    <div class="term-body">
+      <p class="eyebrow l-en">Field guide · stocks &amp; ETF analysis</p>
+      <p class="eyebrow ar l-ar" lang="ar">دليل ميداني · تحليل الأسهم وصناديق المؤشرات</p>
+
+      <h1 class="l-en">Where every tool <span class="accent">plugs into</span> your dashboard</h1>
+      <h1 class="ar l-ar" lang="ar">أين تندمج <span class="accent">كل أداة</span> داخل لوحتك</h1>
+
+      <p class="lede l-en">A map of the analysis landscape — research platforms, screeners, open-source
+        projects, AI layers and data feeds — arranged by <em>where each one sits</em> in the same
+        route&nbsp;→&nbsp;normalize&nbsp;→&nbsp;aggregate pipeline Stocks&nbsp;Eye already runs.</p>
+      <p class="lede ar l-ar" lang="ar">خريطة لأدوات التحليل — منصّات البحث، وأدوات الفرز، والمشاريع مفتوحة
+        المصدر، وطبقات الذكاء الاصطناعي، ومصادر البيانات — مُرتّبة حسب موقع كلٍّ منها في مسار التطبيق نفسه:
+        توجيه ← توحيد ← تجميع.</p>
+    </div>
+  </div>
+
+  <!-- 1. PIPELINE -->
+  <section class="sec">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <div>
+        <h2 class="l-en">The pipeline</h2>
+        <h2 class="ar l-ar" lang="ar">مسار البيانات</h2>
+        <p class="sec-sub l-en">Data flows in stages; tools are grouped by the job they do, not by brand.</p>
+        <p class="sec-sub ar l-ar" lang="ar">تتدفّق البيانات عبر مراحل؛ والأدوات مُجمّعة حسب وظيفتها لا حسب اسمها التجاري.</p>
+      </div>
+    </div>
+    <div class="pipe">
+      <div class="stage">
+        <p class="stage-k">01 · Data feeds</p>
+        <p class="stage-ar" lang="ar">مصادر البيانات</p>
+        <ul><li>Finnhub</li><li>Twelve Data</li><li>Alpha Vantage</li><li>FMP</li></ul>
+        <span class="arrow" aria-hidden="true"></span>
+      </div>
+      <div class="stage">
+        <p class="stage-k">02 · Research</p>
+        <p class="stage-ar" lang="ar">منصّة البحث</p>
+        <ul><li>OpenBB</li><li>Okama</li></ul>
+        <span class="arrow" aria-hidden="true"></span>
+      </div>
+      <div class="stage">
+        <p class="stage-k">03 · Screen / test</p>
+        <p class="stage-ar" lang="ar">الفرز والاختبار</p>
+        <ul><li>TradingView</li><li>Finviz · Koyfin</li><li>Backtesting.py</li></ul>
+        <span class="arrow" aria-hidden="true"></span>
+      </div>
+      <div class="stage">
+        <p class="stage-k">04 · AI layer</p>
+        <p class="stage-ar" lang="ar">طبقة الذكاء</p>
+        <ul><li>TradingAgents</li><li>FinRobot</li></ul>
+        <span class="arrow" aria-hidden="true"></span>
+      </div>
+      <div class="stage final">
+        <p class="stage-k">05 · Your app</p>
+        <p class="stage-ar" lang="ar">تطبيقك</p>
+        <ul>
+          <li>Stocks Eye</li>
+          <li class="l-en">brief · takes</li><li class="l-ar" lang="ar">موجز · لمحات</li>
+          <li class="l-en">movers · news</li><li class="l-ar" lang="ar">الأكثر حركة · أخبار</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. STANDOUTS -->
+  <section class="sec">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <div>
+        <h2 class="l-en">The standouts</h2>
+        <h2 class="ar l-ar" lang="ar">الأبرز في كل فئة</h2>
+        <p class="sec-sub l-en">One or two worth your time per layer — ranked for relevance to this project.</p>
+        <p class="sec-sub ar l-ar" lang="ar">أداة أو اثنتان تستحقّان وقتك في كل طبقة — مُرتّبة حسب صلتها بهذا المشروع.</p>
+      </div>
+    </div>
+    <div class="grid">
+
+      <div class="card hero">
+        <p class="hint l-en">Unify 100+ data sources behind one API</p>
+        <p class="hint ar l-ar" lang="ar">توحيد أكثر من ١٠٠ مصدر خلف واجهة واحدة</p>
+        <div class="card-top"><h3>OpenBB</h3>
+          <span class="tag oss l-en">Open source</span><span class="tag oss ar l-ar" lang="ar">مفتوح المصدر</span></div>
+        <p class="l-en">Research platform: ~900 commands, 8 asset classes, ~100 data sources behind one Python API. Built for analysts, quants &amp; AI agents.</p>
+        <p class="ar l-ar" lang="ar">منصّة بحث: نحو ٩٠٠ أمر، و٨ فئات أصول، ونحو ١٠٠ مصدر بيانات خلف واجهة بايثون واحدة. مبنية للمحلّلين والكمّيين ووكلاء الذكاء الاصطناعي.</p>
+        <p class="why l-en"><b>Why for you:</b> it <em>is</em> your route→normalize→aggregate pattern at scale — study it as an architecture reference.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> إنها نمط «توجيه ← توحيد ← تجميع» على نطاق أوسع — ادرسها كمرجع معماري.</p>
+      </div>
+
+      <div class="card">
+        <p class="hint l-en">Automate AI-driven analysis &amp; debate</p>
+        <p class="hint ar l-ar" lang="ar">أتمتة التحليل والنقاش بالذكاء الاصطناعي</p>
+        <div class="card-top"><h3>TradingAgents</h3>
+          <span class="tag oss l-en">Open source</span><span class="tag oss ar l-ar" lang="ar">مفتوح المصدر</span></div>
+        <p class="l-en">Multi-agent LLM framework: fundamental, sentiment &amp; technical analyst agents debate a call. v0.2 supports Claude&nbsp;4.x.</p>
+        <p class="ar l-ar" lang="ar">إطار متعدّد الوكلاء بنماذج لغوية: وكلاء للتحليل الأساسي والمعنوي والفنّي يتناقشون حول القرار. الإصدار 0.2 يدعم Claude&nbsp;4.x.</p>
+        <p class="why l-en"><b>Why for you:</b> a concrete model to upgrade your Morning&nbsp;Brief + Takes into a real analysis pipeline.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> نموذج عملي لترقية «الموجز الصباحي» و«اللمحات» إلى مسار تحليل حقيقي.</p>
+      </div>
+
+      <div class="card">
+        <p class="hint l-en">Chart, screen &amp; alert on prices</p>
+        <p class="hint ar l-ar" lang="ar">الرسم والفرز والتنبيه على الأسعار</p>
+        <div class="card-top"><h3>TradingView</h3>
+          <span class="tag l-en">Freemium</span><span class="tag ar l-ar" lang="ar">مجاني/مدفوع</span></div>
+        <p class="l-en">Best all-round screener for stocks + ETFs: ~150 metrics, custom indicators &amp; alerts via Pine Script.</p>
+        <p class="ar l-ar" lang="ar">أفضل أداة فرز شاملة للأسهم وصناديق المؤشرات: نحو ١٥٠ مقياسًا، ومؤشرات وتنبيهات مخصّصة عبر Pine Script.</p>
+        <p class="why l-en"><b>Why for you:</b> reference-grade UX for charts, sparklines &amp; movers.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> تجربة استخدام مرجعية للرسوم البيانية والمخطّطات المصغّرة والأكثر حركة.</p>
+      </div>
+
+      <div class="card">
+        <p class="hint l-en">Track &amp; value your portfolio</p>
+        <p class="hint ar l-ar" lang="ar">تتبّع محفظتك وتقييمها</p>
+        <div class="card-top"><h3>Ghostfolio</h3>
+          <span class="tag oss l-en">Open source</span><span class="tag oss ar l-ar" lang="ar">مفتوح المصدر</span></div>
+        <p class="l-en">Self-hosted wealth dashboard for stocks / ETFs / crypto. Angular + NestJS.</p>
+        <p class="ar l-ar" lang="ar">لوحة ثروة ذاتية الاستضافة للأسهم وصناديق المؤشرات والعملات الرقمية. Angular + NestJS.</p>
+        <p class="why l-en"><b>Why for you:</b> the closest polished analog to what you're building.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> أقرب نظير مُتقَن لما تبنيه.</p>
+      </div>
+
+      <div class="card">
+        <p class="hint l-en">Filter stocks by any metric</p>
+        <p class="hint ar l-ar" lang="ar">فرز الأسهم بأيّ مقياس</p>
+        <div class="card-top"><h3>Koyfin · Finviz</h3>
+          <span class="tag l-en">Freemium</span><span class="tag ar l-ar" lang="ar">مجاني/مدفوع</span></div>
+        <p class="l-en">Koyfin = 500+ fundamental metrics &amp; 10-yr history. Finviz = fast free stock screening.</p>
+        <p class="ar l-ar" lang="ar">كوين: أكثر من ٥٠٠ مقياس أساسي وتاريخ ١٠ سنوات. فِنفيز: فرز أسهم مجاني وسريع.</p>
+        <p class="why l-en"><b>Why for you:</b> borrow their filter taxonomy for a future screener view.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> استعِر تصنيف الفلاتر لديها لشاشة فرز مستقبلية.</p>
+      </div>
+
+      <div class="card">
+        <p class="hint l-en">Feed live quotes into your app</p>
+        <p class="hint ar l-ar" lang="ar">تغذية تطبيقك بأسعار لحظية</p>
+        <div class="card-top"><h3>Finnhub · Twelve Data</h3>
+          <span class="tag l-en">Free tier</span><span class="tag ar l-ar" lang="ar">باقة مجانية</span></div>
+        <p class="l-en">Finnhub: free real-time quotes + WebSocket. Twelve&nbsp;Data: 800 calls/day.</p>
+        <p class="ar l-ar" lang="ar">فِنهَب: أسعار لحظية مجانية + WebSocket. تِوِلف داتا: ٨٠٠ طلب يوميًا.</p>
+        <p class="why l-en"><b>Why for you:</b> candidate adapters to sit beside Yahoo / CoinGecko.</p>
+        <p class="why ar l-ar" lang="ar"><b>لماذا تهمّك:</b> محوّلات مرشّحة لتعمل بجانب Yahoo و CoinGecko.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. GAP -->
+  <section class="sec">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <div>
+        <h2 class="l-en">Market coverage — the catch</h2>
+        <h2 class="ar l-ar" lang="ar">تغطية الأسواق — الملاحظة المهمّة</h2>
+        <p class="sec-sub l-en">Almost every tool above is US / global-first. Your MENA markets are the real gap.</p>
+        <p class="sec-sub ar l-ar" lang="ar">معظم الأدوات أعلاه تركّز على الأسواق الأمريكية والعالمية أولًا. أسواق الشرق الأوسط وشمال إفريقيا هي الفجوة الحقيقية.</p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="l-en">Market</span><span class="l-ar" lang="ar">السوق</span></th>
+            <th><span class="l-en">Global tools</span><span class="l-ar" lang="ar">الأدوات العالمية</span></th>
+            <th><span class="l-en">Data APIs (free)</span><span class="l-ar" lang="ar">واجهات البيانات (مجانية)</span></th>
+            <th><span class="l-en">Your current path</span><span class="l-ar" lang="ar">مسارك الحالي</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mkt"><span class="l-en">USA</span><span class="ar l-ar" lang="ar">الولايات المتحدة</span></td>
+            <td><span class="st g l-en">Full</span><span class="st g ar l-ar" lang="ar">كاملة</span></td>
+            <td><span class="st g l-en">Full</span><span class="st g ar l-ar" lang="ar">كاملة</span></td>
+            <td class="path">Yahoo</td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">Crypto</span><span class="ar l-ar" lang="ar">العملات الرقمية</span></td>
+            <td><span class="st g l-en">Full</span><span class="st g ar l-ar" lang="ar">كاملة</span></td>
+            <td><span class="st g l-en">Full</span><span class="st g ar l-ar" lang="ar">كاملة</span></td>
+            <td class="path"><span class="l-en">CoinGecko (live)</span><span class="ar l-ar" lang="ar">CoinGecko (مباشر)</span></td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">Gold</span><span class="ar l-ar" lang="ar">الذهب</span></td>
+            <td><span class="st g l-en">Full</span><span class="st g ar l-ar" lang="ar">كاملة</span></td>
+            <td><span class="st w l-en">Partial</span><span class="st w ar l-ar" lang="ar">جزئية</span></td>
+            <td class="path"><span class="l-en">Live commodity feed</span><span class="ar l-ar" lang="ar">تغذية سلع مباشرة</span></td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">China</span><span class="ar l-ar" lang="ar">الصين</span></td>
+            <td><span class="st w l-en">Partial</span><span class="st w ar l-ar" lang="ar">جزئية</span></td>
+            <td><span class="st w l-en">Partial</span><span class="st w ar l-ar" lang="ar">جزئية</span></td>
+            <td class="path">Yahoo</td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">KSA · TASI</span><span class="ar l-ar" lang="ar">السعودية · تاسي</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td class="path"><span class="l-en">Yahoo <code>^TASI.SR</code> · SAHMK (todo)</span><span class="ar l-ar" lang="ar">Yahoo <code>^TASI.SR</code> · SAHMK (لاحقًا)</span></td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">UAE · DFM/ADX</span><span class="ar l-ar" lang="ar">الإمارات · دبي/أبوظبي</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td class="path"><span class="l-en">Movers live · index mock</span><span class="ar l-ar" lang="ar">الأكثر حركة مباشر · المؤشر تجريبي</span></td>
+          </tr>
+          <tr>
+            <td class="mkt"><span class="l-en">Egypt · EGX</span><span class="ar l-ar" lang="ar">مصر · البورصة المصرية</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td><span class="st c l-en">Weak</span><span class="st c ar l-ar" lang="ar">ضعيفة</span></td>
+            <td class="path"><span class="l-en">Yahoo <code>.CA</code> (close-to-close)</span><span class="ar l-ar" lang="ar">Yahoo <code>.CA</code> (إغلاق لإغلاق)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 4. RECOMMENDATION -->
+  <div class="rec">
+    <h2 class="l-en">What I'd actually do</h2>
+    <h2 class="ar l-ar" lang="ar">خطواتي المقترحة</h2>
+    <ol>
+      <li class="l-en"><b>Skim OpenBB</b> for its multi-source aggregation model — it validates and extends the adapter pattern in <code>lib/data/sources/</code>.</li>
+      <li class="ar l-ar" lang="ar"><b>اطّلع على OpenBB</b> لنموذج تجميعه متعدّد المصادر — فهو يؤكّد ويوسّع نمط المحوّلات في <code>lib/data/sources/</code>.</li>
+
+      <li class="l-en"><b>Prototype a TradingAgents-style flow</b> behind your existing <code>AiSource</code> to turn the Morning Brief into a fundamental + sentiment + technical debate.</li>
+      <li class="ar l-ar" lang="ar"><b>جرّب مسارًا بأسلوب TradingAgents</b> خلف <code>AiSource</code> الحالي لتحويل «الموجز الصباحي» إلى نقاش أساسي ومعنوي وفنّي.</li>
+
+      <li class="l-en"><b>Trial Finnhub as an adapter</b> beside Yahoo for live quotes — one new file in <code>lib/data/sources/</code>, wired in <code>dashboard_repository.dart</code>.</li>
+      <li class="ar l-ar" lang="ar"><b>جرّب Finnhub كمحوّل</b> بجانب Yahoo للأسعار اللحظية — ملف جديد واحد في <code>lib/data/sources/</code>، يُوصَل في <code>dashboard_repository.dart</code>.</li>
+
+      <li class="l-en"><b>Own the MENA gap yourself</b> — no off-the-shelf tool covers TASI / DFM / EGX well; regional sources (Argaam, Mubasher) stay scrape-only. That gap is your app's edge.</li>
+      <li class="ar l-ar" lang="ar"><b>اسدُد فجوة الشرق الأوسط بنفسك</b> — لا أداة جاهزة تغطّي تاسي/دبي/البورصة المصرية جيدًا؛ والمصادر الإقليمية (أرقام، مباشر) تبقى قابلة للكشط فقط. تلك الفجوة هي ميزة تطبيقك.</li>
+    </ol>
+  </div>
+
+  <footer>
+    <span>Sources: OpenBB · TradingAgents · Ghostfolio · Koyfin · Finnhub · stockanalysis.com</span>
+    <span class="l-en">not investment advice</span>
+    <span class="ar l-ar" lang="ar">ليست نصيحة استثمارية</span>
+  </footer>
+
+</div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

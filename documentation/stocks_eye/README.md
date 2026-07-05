@@ -11,6 +11,9 @@ Project docs for the **Stocks Eye** Flutter dashboard. Start here, then dive int
 | [04-ui-and-state.md](04-ui-and-state.md) | Cubits, widgets, tables, responsive layout, theming |
 | [05-running-and-config.md](05-running-and-config.md) | How to run each platform, `.env` vs proxy, the proxy server |
 
+See also **[../resources/](../resources/README.md)** — research background and detailed write-ups of
+the later enhancements (multi-agent Morning Brief, Finnhub live quotes, cross-market screener).
+
 Related: the root [`CLAUDE.md`](../../CLAUDE.md) (guidance for AI coding assistants),
 [`README.md`](../../README.md) (quick run), and [`FLUTTER_BUILD_PLAN.md`](../../FLUTTER_BUILD_PLAN.md)
 (the original build plan + decisions).
