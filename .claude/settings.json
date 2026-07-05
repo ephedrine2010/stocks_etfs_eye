@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter --version)",
+      "Bash(flutter pub *)",
+      "Bash(flutter analyze *)",
+      "Bash(cd \"d:/mini projects/stocks_etfs_eye\" && find ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/lib -name \"*.dart\" 2>/dev/null | head -30; echo \"---example---\"; ls ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/ 2>/dev/null)",
+      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/lib/**)",
+      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/**)",
+      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/lib/src/**)",
+      "Bash(cd ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1 && ls example/lib 2>/dev/null && echo \"=== README table snippet ===\" && sed -n '1,90p' README.md 2>/dev/null | grep -n -A40 \"TableView.builder\" | head -80)",
+      "Bash(cd \"d:/mini projects/stocks_etfs_eye\" && sed -n '85,160p' ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/README.md)",
+      "Bash(cd \"d:/mini projects/stocks_etfs_eye\" && grep -rn \"class TableViewDividersStyle\\\\|class TableViewHorizontalDividersStyle\\\\|class TableViewHorizontalDividerStyle\\\\|class TableViewVerticalDividersStyle\\\\|class TableViewVerticalDividerStyle\\\\|const TableViewStyle\" ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/lib/src/table_view_style.dart | head; echo \"---ctors---\"; grep -n \"const TableViewHorizontalDividersStyle\\\\|const TableViewVerticalDividersStyle\\\\|factory TableViewHorizontalDividersStyle\\\\|factory TableViewVerticalDividersStyle\\\\|const TableViewHorizontalDividerStyle\\\\|const TableViewVerticalDividerStyle\" ~/AppData/Local/Pub/Cache/hosted/pub.dev/material_table_view-5.5.1/lib/src/*.dart)",
+      "Bash(flutter test *)",
+      "Bash(rm -f test/isolate_test.dart)",
+      "Bash(flutter devices *)",
+      "Bash(flutter doctor *)",
+      "Bash(flutter build *)",
+      "Bash(start \"\" \"build/windows/x64/runner/Debug/stocks_etfs_eye.exe\")",
+      "Bash(tasklist //FI \"IMAGENAME eq stocks_etfs_eye.exe\")",
+      "Bash(taskkill //F //IM stocks_etfs_eye.exe)",
+      "Bash(npm install *)",
+      "Bash(node --check server.js)",
+      "Bash(node server.js)",
+      "Bash(curl -s http://localhost:3000/api/health)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST http://localhost:3000/api/ai/take -H \"Content-Type: application/json\" -d '{\"market\":{\"id\":\"us\",\"name\":\"USA\"}}')",
+      "Bash(curl -s -X POST http://localhost:3000/api/ai/brief -H \"Content-Type: application/json\" -d '{\"snapshots\":[{\"id\":\"us\",\"name\":\"USA\",\"index\":\"S&P 500\",\"price\":7483,\"changePct\":0.6,\"open\":true},{\"id\":\"cr\",\"name\":\"Crypto\",\"index\":\"BTC\",\"price\":62936,\"changePct\":0.67,\"open\":true}]}')",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(curl -s -X POST http://localhost:3000/api/ai/brief -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(python -c \"import urllib.parse;print\\(urllib.parse.quote\\('https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=1mo&interval=1d'\\)\\)\")",
+      "Bash(curl -s \"http://localhost:3000/api/fetch?url=$\\(python -c \"import urllib.parse;print\\(urllib.parse.quote\\('https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=1mo&interval=1d'\\)\\)\" || echo 'https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2F%255EGSPC%3Frange%3D1mo%26interval%3D1d'\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:3000/api/fetch?url=https%3A%2F%2Fexample.com\")",
+      "Bash(curl -s \"http://localhost:3000/api/fetch?url=https%3A%2F%2Fwww.cnbc.com%2Fid%2F100003114%2Fdevice%2Frss%2Frss.html\")",
+      "Bash(curl -s -o /dev/null -w \"proxy http: %{http_code}\\\\n\" http://localhost:3000/api/health)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Bash(flutter run *)",
+      "Bash(curl -s \"https://finnhub.io/api/v1/quote?symbol=AAPL&token=d954qopr01qq8ms7dm9gd954qopr01qq8ms7dma0\")"
+    ]
+  }
+}
