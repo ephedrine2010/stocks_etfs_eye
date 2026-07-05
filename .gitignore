@@ -1,6 +1,6 @@
 # Local secrets — never commit
-.env
-*.env
+#.env
+#*.env
 
 # Miscellaneous
 *.class
