@@ -126,13 +126,22 @@ Rules:
     }
   }
 
+  /// Every text field is returned in both languages so the UI toggles with no
+  /// refetch. Appended to each brief prompt.
+  static const _bilingual =
+      'Every text field is an object {"en":"English","ar":"Arabic"}: write the '
+      'English, then a NATURAL (not word-for-word) Arabic rendering of the same '
+      'meaning. Keep each "name" a short Latin label (e.g. "USA", "Gold").';
+
   /// Single-pass brief (the original behaviour; kept for the [_multiAgent] flag).
   Future<Brief> _soloBrief(List<Map<String, dynamic>> snapshots) async {
     final user =
         'Snapshots (ground truth):\n${jsonEncode(snapshots)}\n\n'
-        'Write today\'s roll-up Morning Brief across all markets. Reply as JSON: '
-        '{"lead":"...","lines":[{"id":"","name":"","s":"bull|bear|neut","text":""}],"hint":"...","citations":[]}.';
-    return _parseBrief(_parseJson(await _chat(user, 4000)));
+        'Write today\'s roll-up Morning Brief across all markets. $_bilingual '
+        'Reply as JSON: {"lead":{"en":"","ar":""},"lines":[{"id":"","name":"",'
+        '"s":"bull|bear|neut","text":{"en":"","ar":""}}],"hint":{"en":"","ar":""},'
+        '"citations":[]}.';
+    return _parseBrief(_parseJson(await _chat(user, 6000)));
   }
 
   /// Multi-agent brief: the three desks assess the same snapshots in parallel,
@@ -148,10 +157,11 @@ Rules:
         'Snapshots (ground truth):\n$ground\n\n'
         'Analyst desk filings:\n${jsonEncode(desk)}\n\n'
         'Write today\'s roll-up Morning Brief across all markets, reconciling the '
-        'three desks. Reply as JSON: {"lead":"2-3 sentences","lines":[{"id":"",'
-        '"name":"","s":"bull|bear|neut","text":"one sentence"}],'
-        '"hint":"one actionable, non-advice reminder"}.';
-    final data = _parseJson(await _chat(user, 4000, system: _editorSystem));
+        'three desks. $_bilingual Reply as JSON: {"lead":{"en":"2-3 sentences",'
+        '"ar":""},"lines":[{"id":"","name":"","s":"bull|bear|neut","text":'
+        '{"en":"one sentence","ar":""}}],"hint":{"en":"one actionable, non-advice '
+        'reminder","ar":""}}.';
+    final data = _parseJson(await _chat(user, 6000, system: _editorSystem));
     return _parseBrief(
       data,
       source: '$_model · 3-desk panel',
@@ -214,17 +224,29 @@ Rules:
         flag: flag,
         name: (raw['name'] as String?) ?? '',
         sentiment: sentimentFromString(raw['s'] as String?),
-        text: (raw['text'] as String?) ?? '',
+        text: _localized(raw['text']),
       ));
     }
     return Brief(
-      lead: (data['lead'] as String?) ?? '',
+      lead: _localized(data['lead']),
       lines: lines,
-      hint: (data['hint'] as String?) ?? '',
+      hint: _localized(data['hint']),
       citations: citations ?? _stringList(data['citations']),
       source: source,
       asOf: DateTime.now(),
     );
+  }
+
+  /// A bilingual field: `{"en":"","ar":""}` from the model, or a plain string
+  /// (older/degraded reply) treated as the same text in both languages.
+  static LocalizedText _localized(dynamic v) {
+    if (v is Map) {
+      return LocalizedText(
+        en: (v['en'] as String?)?.trim() ?? '',
+        ar: (v['ar'] as String?)?.trim() ?? '',
+      );
+    }
+    return LocalizedText.mono(v is String ? v : '');
   }
 
   static List<String> _stringList(dynamic v) =>

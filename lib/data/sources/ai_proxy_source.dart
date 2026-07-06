@@ -70,17 +70,29 @@ class AiProxySource implements AiSource {
         flag: flag,
         name: (raw['name'] as String?) ?? '',
         sentiment: sentimentFromString(raw['s'] as String?),
-        text: (raw['text'] as String?) ?? '',
+        text: _localized(raw['text']),
       ));
     }
     return Brief(
-      lead: (data['lead'] as String?) ?? '',
+      lead: _localized(data['lead']),
       lines: lines,
-      hint: (data['hint'] as String?) ?? '',
+      hint: _localized(data['hint']),
       citations: _stringList(data['citations']),
       source: (data['source'] as String?) ?? 'deepseek-chat',
       asOf: DateTime.now(),
     );
+  }
+
+  /// Bilingual `{"en":"","ar":""}`, or a plain string (today's proxy still
+  /// returns single-language) treated as the same text in both languages.
+  static LocalizedText _localized(dynamic v) {
+    if (v is Map) {
+      return LocalizedText(
+        en: (v['en'] as String?)?.trim() ?? '',
+        ar: (v['ar'] as String?)?.trim() ?? '',
+      );
+    }
+    return LocalizedText.mono(v is String ? v : '');
   }
 
   static List<String> _stringList(dynamic v) =>

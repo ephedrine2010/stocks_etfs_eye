@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_table_view/material_table_view.dart';
 
 import '../../app/format.dart';
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import 'common.dart';
@@ -13,11 +14,10 @@ class LeadersTable extends StatelessWidget {
   final List<Leader> leaders;
   const LeadersTable({super.key, required this.leaders});
 
-  static const _headers = ['Ticker', 'Company', 'Price', 'Chg', 'Div yield'];
-
   @override
   Widget build(BuildContext context) {
     if (leaders.isEmpty) return const SizedBox.shrink();
+    final headers = context.s.leadersHeaders;
     return AppTable(
       rowCount: leaders.length,
       columns: const [
@@ -27,7 +27,7 @@ class LeadersTable extends StatelessWidget {
         TableColumn(width: 60),
         TableColumn(width: 78),
       ],
-      headerCell: (c) => TableHeaderText(_headers[c]),
+      headerCell: (c) => TableHeaderText(headers[c]),
       cell: (row, col) {
         final s = leaders[row];
         return switch (col) {

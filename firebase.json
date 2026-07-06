@@ -1,0 +1,29 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "stocketfseye",
+          "appId": "1:1049316374463:android:d4abb6fe99ba3b4625d30a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "stocketfseye",
+          "configurations": {
+            "android": "1:1049316374463:android:d4abb6fe99ba3b4625d30a",
+            "ios": "1:1049316374463:ios:f6c1af3c28d7867d25d30a",
+            "macos": "1:1049316374463:ios:f6c1af3c28d7867d25d30a",
+            "web": "1:1049316374463:web:59cf0c6f2310120c25d30a",
+            "windows": "1:1049316374463:web:7fbe03598033c50f25d30a"
+          }
+        }
+      }
+    }
+  }
+}

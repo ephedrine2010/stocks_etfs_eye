@@ -9,12 +9,16 @@ environment:
 dependencies:
   dio: ^5.10.0
   equatable: ^2.1.0
+  firebase_core: ^4.11.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
   flutter_tabler_icons: ^1.43.0
   intl: ^0.20.2
   material_table_view: ^5.5.1
+  shared_preferences: ^2.3.2
   timezone: ^0.10.1
 
 dev_dependencies:

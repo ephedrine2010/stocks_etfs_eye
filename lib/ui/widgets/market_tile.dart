@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app/format.dart';
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../cubit/clock_cubit.dart';
 import '../../data/models/models.dart';
@@ -25,12 +26,13 @@ class MarketTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = context.s;
     final changePct = market.quote.changePct;
     final label = market.always
         ? '24/7'
         : market.commodity
-        ? 'Trades'
-        : 'Local';
+        ? s.tradesLabel
+        : s.localLabel;
     final suffix = (market.always || market.commodity) ? ' UTC' : '';
 
     return Material(
@@ -53,7 +55,7 @@ class MarketTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _header(),
+              _header(s),
               const SizedBox(height: 10),
               Text(
                 market.indexLabel,
@@ -76,7 +78,7 @@ class MarketTile extends StatelessWidget {
               const SizedBox(height: 8),
               _clock(label, suffix),
               const SizedBox(height: 8),
-              _watch(),
+              _watch(s),
             ],
           ),
         ),
@@ -84,7 +86,7 @@ class MarketTile extends StatelessWidget {
     );
   }
 
-  Widget _header() => Row(
+  Widget _header(Strings s) => Row(
     children: [
       Text(market.flag, style: const TextStyle(fontSize: 19)),
       const SizedBox(width: 8),
@@ -94,7 +96,7 @@ class MarketTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              market.name,
+              market.nameFor(s.ar),
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -103,7 +105,7 @@ class MarketTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              market.city,
+              market.cityFor(s.ar),
               style: const TextStyle(fontSize: 10.5, color: AppColors.ink3),
               overflow: TextOverflow.ellipsis,
             ),
@@ -125,14 +127,14 @@ class MarketTile extends StatelessWidget {
         ),
       );
 
-  Widget _watch() => Wrap(
+  Widget _watch(Strings s) => Wrap(
     spacing: 4,
     runSpacing: 4,
     crossAxisAlignment: WrapCrossAlignment.center,
     children: [
-      const Text(
-        'Watch',
-        style: TextStyle(
+      Text(
+        s.watch,
+        style: const TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w700,
           color: AppColors.ink3,

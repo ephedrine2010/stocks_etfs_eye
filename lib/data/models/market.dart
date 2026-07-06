@@ -32,6 +32,10 @@ class Market extends Equatable {
   String get name => config.name;
   String get city => config.city;
   String get flag => config.flag;
+
+  // Localized labels — fall back to the English/base value when no Arabic given.
+  String nameFor(bool ar) => ar ? (config.nameAr ?? config.name) : config.name;
+  String cityFor(bool ar) => ar ? (config.cityAr ?? config.city) : config.city;
   String get tz => config.tz;
   String get currency => config.currency;
   String get indexLabel => config.index.label;

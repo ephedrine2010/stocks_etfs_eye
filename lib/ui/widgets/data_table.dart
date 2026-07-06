@@ -33,7 +33,13 @@ class AppTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TableView.builder(
+    // Data grids stay left-to-right even in Arabic (RTL) mode: tickers, prices
+    // and percentages are Latin/numeric and read L→R, and it keeps the column
+    // order and numeric right-alignment stable. Arabic header labels still
+    // render correctly (each text run carries its own direction).
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: TableView.builder(
       columns: columns,
       rowCount: rowCount,
       rowHeight: rowHeight,
@@ -69,6 +75,7 @@ class AppTable extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

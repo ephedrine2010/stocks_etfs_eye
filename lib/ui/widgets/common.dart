@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/format.dart';
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 
 /// Uppercase section label — the old `.lbl`.
@@ -79,7 +80,7 @@ class StatusPill extends StatelessWidget {
           _Dot(color: color, pulse: open),
           const SizedBox(width: 5),
           Text(
-            open ? 'OPEN' : 'CLOSED',
+            open ? context.s.open : context.s.closed,
             style: TextStyle(
               fontSize: 9.5,
               fontWeight: FontWeight.w700,

@@ -35,9 +35,10 @@ void main() {
     ).load();
     final brief = dash.brief!;
     debugPrint('brief.source=${brief.source}');
-    debugPrint('brief.lead="${brief.lead}"');
+    debugPrint('brief.lead[en]="${brief.lead.en}"');
+    debugPrint('brief.lead[ar]="${brief.lead.ar}"');
     for (final l in brief.lines) {
-      debugPrint('  ${l.flag} ${l.name.padRight(10)} ${l.sentiment.name} — ${l.text}');
+      debugPrint('  ${l.flag} ${l.name.padRight(10)} ${l.sentiment.name} — ${l.text.en} / ${l.text.ar}');
     }
     final take = dash.marketById('us')!.take!;
     debugPrint('US take.source=${take.source}');

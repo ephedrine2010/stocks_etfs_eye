@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../cubit/clock_cubit.dart';
 import '../../cubit/dashboard_cubit.dart';
+import '../../cubit/locale_cubit.dart';
 import '../../data/models/models.dart';
 import '../../data/repository/market_hours.dart';
 
@@ -31,9 +33,11 @@ class Topbar extends StatelessWidget {
               return Row(
                 mainAxisSize: narrow ? MainAxisSize.max : MainAxisSize.min,
                 children: [
+                  const _LangToggle(),
+                  const SizedBox(width: 6),
                   const _RefreshButton(),
                   const SizedBox(width: 6),
-                  _Badge('$open / ${markets.length} open'),
+                  _Badge(context.s.openBadge(open, markets.length)),
                   const SizedBox(width: 14),
                   // Flexible so a tight screen shrinks the clock instead of
                   // overflowing; the subtitle is dropped when narrow.
@@ -99,7 +103,7 @@ class _Brand extends StatelessWidget {
               ),
             ),
             Text(
-              'MULTI-MARKET MONITOR',
+              context.s.monitorSubtitle,
               style: AppText.label.copyWith(fontSize: 10),
             ),
           ],
@@ -118,7 +122,7 @@ class _RefreshButton extends StatelessWidget {
       builder: (context, state) {
         final refreshing = state is DashboardLoaded && state.refreshing;
         return IconButton(
-          tooltip: 'Refresh',
+          tooltip: context.s.refresh,
           visualDensity: VisualDensity.compact,
           iconSize: 18,
           color: AppColors.ink2,
@@ -137,6 +141,61 @@ class _RefreshButton extends StatelessWidget {
               : const Icon(TablerIcons.refresh),
         );
       },
+    );
+  }
+}
+
+/// A compact two-segment EN ⇄ ع language switch; the active language is tinted.
+/// Tapping either segment sets that language via the shared [LocaleCubit], so
+/// the whole app re-renders (and flips LTR/RTL).
+class _LangToggle extends StatelessWidget {
+  const _LangToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<LocaleCubit>();
+    final ar = cubit.isArabic;
+    return Container(
+      height: 28,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(99),
+        border: Border.all(color: AppColors.line),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _seg('EN', active: !ar, onTap: () => cubit.setLocale(LocaleCubit.en)),
+          _seg('ع', active: ar, onTap: () => cubit.setLocale(LocaleCubit.ar)),
+        ],
+      ),
+    );
+  }
+
+  Widget _seg(String label, {required bool active, required VoidCallback onTap}) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active
+                ? AppColors.accent.withValues(alpha: 0.16)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(99),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+              color: active ? AppColors.accent : AppColors.ink3,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -179,9 +238,9 @@ class _Clock extends StatelessWidget {
           style: AppText.mono.copyWith(fontSize: 15, color: AppColors.ink),
         ),
         if (!compact)
-          const Text(
-            'Coordinated Universal Time',
-            style: TextStyle(fontSize: 11, color: AppColors.ink2),
+          Text(
+            context.s.utcLong,
+            style: const TextStyle(fontSize: 11, color: AppColors.ink2),
             overflow: TextOverflow.ellipsis,
           ),
       ],

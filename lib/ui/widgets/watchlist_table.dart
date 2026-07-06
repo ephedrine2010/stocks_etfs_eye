@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_table_view/material_table_view.dart';
 
+import '../../app/i18n.dart';
 import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import 'common.dart';
@@ -11,11 +12,10 @@ class WatchlistTable extends StatelessWidget {
   final List<WatchRow> rows;
   const WatchlistTable({super.key, required this.rows});
 
-  static const _headers = ['Symbol', 'Native', 'USD', 'Chg'];
-
   @override
   Widget build(BuildContext context) {
     if (rows.isEmpty) return const SizedBox.shrink();
+    final headers = context.s.watchlistHeaders;
     return AppTable(
       rowCount: rows.length,
       rowHeight: 46,
@@ -25,7 +25,7 @@ class WatchlistTable extends StatelessWidget {
         TableColumn(width: 84),
         TableColumn(width: 56),
       ],
-      headerCell: (c) => TableHeaderText(_headers[c]),
+      headerCell: (c) => TableHeaderText(headers[c]),
       cell: (row, col) {
         final r = rows[row];
         return switch (col) {

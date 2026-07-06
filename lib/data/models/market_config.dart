@@ -63,6 +63,8 @@ class MarketConfig extends Equatable {
   final String id;
   final String name;
   final String city;
+  final String? nameAr; // Arabic market name; falls back to `name`.
+  final String? cityAr; // Arabic city label; falls back to `city`.
   final String flag;
   final String tz;
   final String currency;
@@ -85,6 +87,8 @@ class MarketConfig extends Equatable {
     required this.id,
     required this.name,
     required this.city,
+    this.nameAr,
+    this.cityAr,
     required this.flag,
     required this.tz,
     required this.currency,

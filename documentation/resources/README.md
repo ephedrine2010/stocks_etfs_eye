@@ -10,6 +10,7 @@ three enhancements added on top of the base app. These sit alongside the core do
 | [01-multi-agent-brief.md](01-multi-agent-brief.md) | **Feature:** the Morning Brief upgraded to a 3-analyst debate + editor (direct DeepSeek). |
 | [02-finnhub-adapter.md](02-finnhub-adapter.md) | **Feature:** a live real-time US quote adapter (Finnhub) for USA + Gold movers. |
 | [03-cross-market-screener.md](03-cross-market-screener.md) | **Feature:** a sortable/filterable screener across all 7 markets' movers + leaders. |
+| [04-bilingual-i18n.md](04-bilingual-i18n.md) | **Feature:** an in-app EN ⇄ AR language toggle with full RTL layout, persisted across relaunches. |
 | [tooling-map/](tooling-map/) | Standalone bilingual (EN/AR) visual map of the tooling landscape — open `index.html` in a browser. |
 
 ## How these relate to the core rule
@@ -27,3 +28,4 @@ Every feature honoured the project's modularity rule (see the root
 | 01 | Multi-agent Morning Brief | direct DeepSeek (`.env` key) | `DeepSeekSource._multiAgent` |
 | 02 | Finnhub live US movers | Finnhub free tier (`.env` key) | presence of `FINNHUB_API_KEY` |
 | 03 | Cross-market screener | reuses already-fetched movers/leaders | always on (no key) |
+| 04 | Bilingual EN ⇄ AR toggle | `Strings` lookup + `LocaleCubit` (persisted) | always on (no key) |
