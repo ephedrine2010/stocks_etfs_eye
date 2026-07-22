@@ -35,7 +35,17 @@
       "Skill(artifact-design)",
       "Skill(artifact-design:*)",
       "Bash(flutter run *)",
-      "Bash(curl -s \"https://finnhub.io/api/v1/quote?symbol=AAPL&token=d954qopr01qq8ms7dm9gd954qopr01qq8ms7dma0\")"
+      "Bash(curl -s \"https://finnhub.io/api/v1/quote?symbol=AAPL&token=d954qopr01qq8ms7dm9gd954qopr01qq8ms7dma0\")",
+      "Bash(git pull *)",
+      "Bash(ls -la \"build/windows/x64/extracted/firebase_cpp_sdk_windows\" 2>&1; echo \"---download cache---\"; ls -la ~/AppData/Local/Temp/*firebase* 2>&1 | head; find \"build/windows/x64\" -maxdepth 2 -iname \"*firebase*\" 2>&1 | head)",
+      "Read(//c/Users/ephed/AppData/Local/Temp/**)",
+      "Bash(unzip -l \"build/windows/x64/firebase_cpp_sdk_windows_13.5.0.zip\")",
+      "Bash(rm -rf \"build/windows/x64/extracted/firebase_cpp_sdk_windows\" && echo \"removed incomplete extraction\")",
+      "Read(//d/mini projects/stocks_etfs_eye/windows/flutter/ephemeral/.plugin_symlinks/firebase_core/windows/**)",
+      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-4.11.0/windows/**)"
+    ],
+    "additionalDirectories": [
+      "D:\\mini projects\\stocks_etfs_eye\\build\\windows\\x64\\extracted\\firebase_cpp_sdk_windows"
     ]
   }
 }
