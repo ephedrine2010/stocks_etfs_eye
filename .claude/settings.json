@@ -42,7 +42,13 @@
       "Bash(unzip -l \"build/windows/x64/firebase_cpp_sdk_windows_13.5.0.zip\")",
       "Bash(rm -rf \"build/windows/x64/extracted/firebase_cpp_sdk_windows\" && echo \"removed incomplete extraction\")",
       "Read(//d/mini projects/stocks_etfs_eye/windows/flutter/ephemeral/.plugin_symlinks/firebase_core/windows/**)",
-      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-4.11.0/windows/**)"
+      "Read(//c/Users/ephed/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-4.11.0/windows/**)",
+      "PowerShell(git grep -n -I -E \"sk-[a-zA-Z0-9]{16,}\" $\\(git rev-list 8522a9e~1..HEAD\\) -- 2>$null | Select-Object -First 30)",
+      "PowerShell(git branch backup-before-env-purge HEAD; if \\($?\\) { echo \"backup branch created at $\\(git rev-parse --short HEAD\\)\" }; Copy-Item .env \"$env:TEMP\\\\env-backup-stockseye.txt\" -Force; echo \"disk copy of .env saved to $env:TEMP\\\\env-backup-stockseye.txt\")",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch .env' -- origin/main..HEAD)",
+      "Bash(git stash *)",
+      "PowerShell(git push origin main 2>&1)",
+      "Bash(git fetch *)"
     ],
     "additionalDirectories": [
       "D:\\mini projects\\stocks_etfs_eye\\build\\windows\\x64\\extracted\\firebase_cpp_sdk_windows"
