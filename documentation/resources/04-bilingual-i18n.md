@@ -1,5 +1,10 @@
 # 04 · Bilingual EN ⇄ AR toggle
 
+> **Superseded (2026-08-05).** This feature was **removed**: the UI is English only. `app/i18n.dart`,
+> `LocaleCubit`, the EN/ع toggle and the Arabic market names are gone. Kept as a record of the design.
+> `LocalizedText` survives in the AI models because the DeepSeek/proxy parsers still return both
+> sides; nothing renders the Arabic one.
+
 Adds an in-app **language switch** that flips the whole dashboard between **English and Arabic**,
 including full **right-to-left** layout. A natural fit for the app's MENA focus (see the coverage gap
 in [00-tooling-landscape.md](00-tooling-landscape.md)) — the markets are Gulf/Egypt, now the UI can be

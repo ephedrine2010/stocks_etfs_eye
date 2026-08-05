@@ -1,5 +1,10 @@
 # 03 · Cross-market screener
 
+> **Historical note (2026-08-05 restructure).** Still shipping, and now the top section of the
+> home page. It moved to `lib/screen_all_markets/`, its sort/filter/search state moved out of
+> widget state into `ScreenAllMarketsCubit`, and a row tap now opens that market's details
+> dialog. See [`../stocks_eye/04-ui-and-state.md`](../stocks_eye/04-ui-and-state.md).
+
 A new dashboard card that flattens **every market's movers + leaders into one sortable, filterable
 table** — rank instruments across all 7 markets at once. It reuses data already fetched per market,
 so it makes **zero extra API calls** and works for every market, MENA included.

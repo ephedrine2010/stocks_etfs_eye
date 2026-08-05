@@ -1,5 +1,8 @@
 # 02 · Finnhub live-quote adapter
 
+> **Historical note (2026-08-05 restructure).** Still shipping, but the paths below moved:
+> `lib/data/sources/` → `lib/services/sources/`, `lib/data/repository/` → `lib/services/`.
+
 Adds **real-time US stock/ETF quotes** (Finnhub free tier) as a new data source, used for the markets
 whose movers are US-listed — **USA and Gold**. This is a textbook run of the core rule: *add a source
 → one adapter file + a few lines of repository wiring; the UI is untouched.*

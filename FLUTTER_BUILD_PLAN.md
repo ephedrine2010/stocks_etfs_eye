@@ -1,5 +1,11 @@
 # Stocks Eye — Flutter Rebuild · Build Plan
 
+> **Historical record.** This is the plan the rebuild was executed from, kept for its constraints,
+> decisions and rationale. The folder layout and screen anatomy below describe the app **as first
+> built** — it was restructured into feature folders on 2026-08-05. For the current shape, read
+> [`documentation/stocks_eye/01-architecture.md`](documentation/stocks_eye/01-architecture.md) and
+> the root [`CLAUDE.md`](CLAUDE.md).
+
 A ground-up Flutter rebuild of the `assets/stocks_eye_old` Node/vanilla-JS dashboard.
 Same product, same data model, same dark gold-accent look — native Flutter, standalone
 (no required backend), with a clean adapter layer that keeps the old app's best property:

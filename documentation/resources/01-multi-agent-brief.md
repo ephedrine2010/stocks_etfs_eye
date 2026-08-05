@@ -1,5 +1,9 @@
 # 01 · Multi-agent Morning Brief
 
+> **Historical note (2026-08-05 restructure).** Still shipping, but the paths below moved:
+> `lib/data/sources/` → `lib/services/sources/`. The Morning Brief itself is fetched and cached
+> but no longer rendered — see [`../stocks_eye/01-architecture.md`](../stocks_eye/01-architecture.md).
+
 Upgrades the daily AI **Morning Brief** from a single model call into a small analyst **desk**: three
 specialist analysts each file a view, then a chief editor reconciles them into the final brief.
 Inspired by [TradingAgents](https://github.com/TauricResearch/TradingAgents) (see

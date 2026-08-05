@@ -1,54 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stocks_etfs_eye/app/data_policy.dart';
-import 'package:stocks_etfs_eye/cubit/locale_cubit.dart';
-import 'package:stocks_etfs_eye/data/repository/dashboard_repository.dart';
-import 'package:stocks_etfs_eye/data/repository/market_hours.dart';
 import 'package:stocks_etfs_eye/main.dart';
+import 'package:stocks_etfs_eye/market_details/market_details_dialog.dart';
+import 'package:stocks_etfs_eye/markets_list/markets_list_view.dart';
+import 'package:stocks_etfs_eye/screen_all_markets/screen_all_markets_view.dart';
+import 'package:stocks_etfs_eye/services/dashboard_repository.dart';
+import 'package:stocks_etfs_eye/services/market_hours.dart';
 
+/// Offline, deterministic widget tests over the mock repository.
+///
+/// The narrow cases assert no overflow at 320–390 px — the regression that
+/// catches most layout mistakes.
 void main() {
-  testWidgets('dashboard renders brand, brief, tiles and tables on mock data',
-      (tester) async {
+  /// Pump the app and let the async mock load resolve. Avoids `pumpAndSettle`:
+  /// the markets-list ticker is periodic and never settles.
+  Future<void> pumpApp(WidgetTester tester, {required Size size}) async {
     MarketHours.ensureInitialized();
-    // A desktop-ish surface so the side-by-side layout and grid lay out.
-    tester.view.physicalSize = const Size(1300, 2400);
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
 
-    await tester.pumpWidget(const StocksEyeApp(
-      repository: DashboardRepository(policy: DataPolicy(offline: true)),
-    ));
-    // Let the async mock repository load resolve (avoid pumpAndSettle — the
-    // ClockCubit's periodic timer never settles).
+    await tester.pumpWidget(
+      const StocksEyeApp(
+        repository: DashboardRepository(policy: DataPolicy(offline: true)),
+      ),
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
+  }
+
+  testWidgets('home renders the brand, the screener and the market tiles', (
+    tester,
+  ) async {
+    await pumpApp(tester, size: const Size(1300, 2400));
 
     expect(find.text('Stocks Eye'), findsOneWidget);
-    expect(find.text('AI MORNING BRIEF'), findsOneWidget);
+    // Both sections of the new home page, in order.
+    expect(find.byType(ScreenAllMarketsView), findsOneWidget);
+    expect(find.byType(MarketsListView), findsOneWidget);
+    expect(find.text('SCREEN — ALL MARKETS'), findsOneWidget);
+    expect(find.text('MARKETS — LIVE STATUS'), findsOneWidget);
     // A market tile (USA) rendered.
     expect(find.text('United States'), findsWidgets);
-    // Detail panel (default selection = USA → S&P 500) and a table header.
-    expect(find.text('Top movers · session'.toUpperCase()), findsOneWidget);
-    expect(find.text('Watchlist · normalized to USD'.toUpperCase()),
-        findsOneWidget);
+    expect(tester.takeException(), isNull);
 
-    // Dispose to cancel the ClockCubit timer so the test ends cleanly.
+    // Dispose to cancel the ticker so the test ends cleanly.
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('renders on a narrow (mobile) surface without overflow',
-      (tester) async {
-    MarketHours.ensureInitialized();
-    tester.view.physicalSize = const Size(390, 5200);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
+  testWidgets('tapping a market tile opens its details dialog', (tester) async {
+    await pumpApp(tester, size: const Size(1300, 2400));
 
-    await tester.pumpWidget(const StocksEyeApp(
-      repository: DashboardRepository(policy: DataPolicy(offline: true)),
-    ));
+    expect(find.byType(MarketDetailsDialog), findsNothing);
+    await tester.tap(find.text('United States').first);
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(MarketDetailsDialog), findsOneWidget);
+    // The dialog shows that market's index and its sections.
+    expect(find.text('S&P 500'), findsWidgets);
+    expect(find.text('TOP MOVERS · SESSION'), findsOneWidget);
+    expect(find.text('LATEST · NEWS & SENTIMENT'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the open/closed filter narrows the market tiles', (
+    tester,
+  ) async {
+    await pumpApp(tester, size: const Size(1300, 2400));
+
+    // Crypto is always open, so "Open · n" always has at least one market.
+    final openPill = find.textContaining(RegExp(r'^Open · \d'));
+    expect(openPill, findsOneWidget);
+    await tester.tap(openPill);
+    await tester.pump();
+
+    expect(find.text('Crypto'), findsWidgets);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('renders on a narrow (mobile) surface without overflow', (
+    tester,
+  ) async {
+    await pumpApp(tester, size: const Size(390, 5200));
 
     expect(find.text('Stocks Eye'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -56,42 +95,23 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('renders in Arabic (RTL) without overflow and can toggle back',
-      (tester) async {
-    MarketHours.ensureInitialized();
-    SharedPreferences.setMockInitialValues({}); // so the toggle can persist
-    tester.view.physicalSize = const Size(390, 5200);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
+  testWidgets('renders at 320 px without overflow', (tester) async {
+    await pumpApp(tester, size: const Size(320, 6000));
 
-    await tester.pumpWidget(const StocksEyeApp(
-      initialLocale: LocaleCubit.ar,
-      repository: DashboardRepository(policy: DataPolicy(offline: true)),
-    ));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
-
-    // The whole tree is right-to-left in Arabic.
-    expect(Directionality.of(tester.element(find.byType(Scaffold))),
-        TextDirection.rtl);
-    // Arabic chrome is rendered (translated market status label) and the longer
-    // Arabic strings don't overflow the 390px surface.
-    expect(find.text('الأسواق — الحالة المباشرة'), findsOneWidget);
-    // AI brief *content* is bilingual: the Arabic side of a mock brief line shows.
-    expect(find.text('العقود الآجلة أقوى؛ أسهم التقنية الكبرى تتصدر قبل الافتتاح.'),
-        findsOneWidget);
+    expect(find.text('Stocks Eye'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    // Tapping the EN segment flips the app back to English (LTR).
-    await tester.tap(find.text('EN'));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the details dialog fits a narrow surface', (tester) async {
+    await pumpApp(tester, size: const Size(390, 5200));
+
+    await tester.tap(find.text('United States').first);
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
-    expect(find.text('Markets — live status'.toUpperCase()), findsOneWidget);
-    // The same brief line now shows its English text — no refetch needed.
-    expect(find.text('Futures firmer; megacap tech leads pre-market.'),
-        findsOneWidget);
-    expect(Directionality.of(tester.element(find.byType(Scaffold))),
-        TextDirection.ltr);
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(MarketDetailsDialog), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(const SizedBox());

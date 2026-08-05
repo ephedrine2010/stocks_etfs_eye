@@ -1,7 +1,7 @@
 # 02 · Data sources
 
-Each source is an isolated adapter in `lib/data/sources/`. All return the normalized model and fail
-soft so the repository falls back to the next option (ultimately mock).
+Each source is an isolated adapter in `lib/services/sources/`. All return the normalized model and
+fail soft so the repository falls back to the next option (ultimately mock).
 
 ## CoinGecko — `coingecko_source.dart`
 - **Live everywhere**, including Web (CORS-enabled, no API key).

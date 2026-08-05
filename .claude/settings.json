@@ -48,7 +48,15 @@
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch .env' -- origin/main..HEAD)",
       "Bash(git stash *)",
       "PowerShell(git push origin main 2>&1)",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(mkdir -p lib/services/sources lib/shared/widgets lib/home/cubit lib/home/widgets lib/markets_list/cubit lib/markets_list/widgets lib/screen_all_markets/cubit lib/screen_all_markets/widgets lib/market_details/cubit lib/market_details/widgets)",
+      "Bash(git mv *)",
+      "Bash(cd \"d:/mini projects/stocks_etfs_eye\" && git rm -q lib/ui/widgets/brief_card.dart lib/ui/widgets/watchlist_table.dart lib/cubit/clock_cubit.dart lib/cubit/selection_cubit.dart lib/cubit/locale_cubit.dart lib/app/i18n.dart && rmdir lib/ui/widgets lib/ui lib/cubit lib/data/sources lib/data/repository 2>/dev/null; find lib -type d | sort)",
+      "Bash(sort -t: -k3)",
+      "Bash(sed -i \"s|^import '\\\\.\\\\./config/|import '../../data/config/|; s|^import '\\\\.\\\\./models/|import '../../data/models/|\" lib/services/sources/*.dart)",
+      "Bash(sed -i \"s|^import '\\\\.\\\\./\\\\.\\\\./app/|import '../app/|; s|^import '\\\\.\\\\./config/|import '../data/config/|; s|^import '\\\\.\\\\./models/|import '../data/models/|; s|^import '\\\\.\\\\./sources/|import 'sources/|\" lib/services/dashboard_repository.dart)",
+      "Bash(sed -i \"s|^import '\\\\.\\\\./models/|import '../data/models/|\" lib/services/market_hours.dart)",
+      "Bash(./build/windows/x64/runner/Debug/stocks_etfs_eye.exe)"
     ],
     "additionalDirectories": [
       "D:\\mini projects\\stocks_etfs_eye\\build\\windows\\x64\\extracted\\firebase_cpp_sdk_windows"

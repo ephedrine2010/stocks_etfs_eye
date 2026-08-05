@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stocks_etfs_eye/app/data_policy.dart';
-import 'package:stocks_etfs_eye/data/repository/dashboard_repository.dart';
-import 'package:stocks_etfs_eye/data/repository/market_hours.dart';
+import 'package:stocks_etfs_eye/services/dashboard_repository.dart';
+import 'package:stocks_etfs_eye/services/market_hours.dart';
 
 /// Not a unit test — a live probe. Hits the real CoinGecko/Yahoo/RSS endpoints
 /// and prints what came back live vs mock. Run with:

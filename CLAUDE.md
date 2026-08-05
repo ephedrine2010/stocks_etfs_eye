@@ -4,12 +4,22 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 **Stocks Eye** — a Flutter multi-market monitoring dashboard for 7 markets (USA, KSA, UAE, Egypt,
-China, Gold, Crypto). Live open/closed status + per-market local clocks, prices with sparklines, top
-movers, leading stocks + dividends, per-market news + sentiment, and a daily AI **Morning Brief**.
+China, Gold, Crypto). The home page is the cross-market **screener** over the live **market tiles**
+(open/closed + per-market local clocks, price, sparkline); tapping a market — a tile or a screener
+row — opens its **details dialog** (chart, AI Take, leading stocks + dividends, top movers, news +
+sentiment).
 
 A ground-up Flutter rebuild of an earlier Node/vanilla-JS app kept for reference in
 `assets/stocks_eye_old/` (its own `CLAUDE.md` documents the original). Full docs live in
-[`documentation/stocks_eye/`](documentation/stocks_eye/) — read `README.md` there first.
+[`documentation/stocks_eye/`](documentation/stocks_eye/) — read `README.md` there first; they were
+updated with the 2026-08-05 feature-folder restructure and match the current code. **Historical
+records** (`FLUTTER_BUILD_PLAN.md`, `documentation/resources/*`) describe the app as first built and
+carry a note saying so — where they disagree, `documentation/stocks_eye/` and this file are right.
+
+**UI language is English only.** The EN/ع toggle, `app/i18n.dart`, `LocaleCubit` and the Arabic
+market names were removed on 2026-08-05 — don't reintroduce localized strings without asking.
+`LocalizedText` survives in the AI models because the DeepSeek/proxy parsers still return both
+sides; nothing renders the Arabic one.
 
 ## Stack (fixed — don't swap without asking)
 - **State:** `cubit` via `flutter_bloc`. No other state-management lib.
@@ -33,6 +43,14 @@ assert **no overflow at 320–390 px**, which catches the most common regression
 ## Conventions
 - 2-space indent; `const` wherever possible; models are immutable + `equatable`.
 - File references in prose use `path:line`. Match the surrounding code's style.
+- **Design:** follow `.claude/skills/eph-design`, mapped onto this app's palette. No `Colors.*`,
+  `Color(0x…)` or `.shade*` in a widget — every colour comes from `AppColors`. Every spacing, radius
+  and icon size is a token (`AppSpacing`/`AppRadius`/`AppIconSize`/`AppMotion`) and every text style
+  is a named `AppText` style, not a freehand `fontSize:`. Flat surfaces with a 1 px border — no
+  gradients, no coloured shadows (a dialog is the one thing allowed to float). Icons are
+  `TablerIcons.*`; empty states use the `_off` glyph and say what to do next. Numbers in a column
+  carry tabular figures (`AppText.mono`/`numCell`). A surface that opens over the page closes from an
+  `X` in its **top-left**.
 - Reference the running app on Windows with the built exe under
   `build/windows/x64/runner/Debug/`; kill a stale instance with
   `taskkill //F //IM stocks_etfs_eye.exe` before relaunching.
@@ -43,21 +61,45 @@ place that stitches them together, choosing a source per market and falling back
 failure. The UI never knows which source answered. (See `documentation/stocks_eye/01-architecture.md`.)
 
 ```
-DashboardCubit.load() → DashboardRepository.load()
+HomeCubit.load() → DashboardRepository.load()
   per market: quote (coingecko|yahoo|mock) · movers (coingecko|yahoo|mock) ·
               leaders (yahoo|[]) · news (rss|mock)
   then: takes + brief (deepseek direct|proxy|mock) · watchlist (mock + live crypto/gold)
   → Dashboard { markets[], watchlist[], brief, asOf }
 ```
 
-Directory map (`lib/`): `app/` (theme, format, data_policy, config, env loader) · `data/models/` ·
-`data/config/markets.dart` (the 7 markets) · `data/sources/` (one file per source) ·
-`data/repository/` (market_hours + aggregator) · `cubit/` · `ui/` (page + widgets).
+`Dashboard.brief` and `.watchlist` are still fetched but nothing renders them since the home page
+was cut back to its two sections — keep them working; they are the cheapest way to bring either
+feature back.
+
+### Feature folders (`lib/`)
+One folder per feature, each owning its cubit + widgets; a feature never reaches into another's
+internals. Composition happens in `home/`.
+
+| Folder | Holds |
+|---|---|
+| `home/` | `home_page.dart` (the only page) · `HomeCubit` (loads/refreshes the dashboard) · topbar |
+| `screen_all_markets/` | the cross-market screener + `ScreenAllMarketsCubit` (flatten, sort, filter, search) |
+| `markets_list/` | the "markets — live status" tiles + `MarketsListCubit` (the 1 s tick, open/closed, filter) |
+| `market_details/` | `showMarketDetails()` dialog + `MarketDetailsCubit` (one market, its own tick) |
+| `shared/widgets/` | primitives every feature uses: `AppCard`/`IconChip`/`EmptyState`, `AppPill`/`AppSearchField`, `AppTable`, `Sparkline`, `ChangeText`/`StatusPill`/`InfoChip` |
+| `services/` | `dashboard_repository.dart` (the aggregator) · `market_hours.dart` · `sources/` (one file per source) |
+| `data/` | `models/` · `config/markets.dart` (the 7 markets) |
+| `app/` | theme + design tokens, format, data_policy, config, env loader |
+
 `proxy/` is a thin Node server (holds the DeepSeek key; forwards CORS-blocked web requests).
 
+**One timer for the page.** `MarketsListCubit` ticks once a second and derives every market's
+open/closed + local clock; the topbar's UTC clock and "N open" badge read the same state. Don't add
+a second app-wide ticker. `MarketDetailsCubit` runs its own only while the dialog is open.
+
+**Feeding the sections.** `HomeCubit` is the only thing that touches the repository; `home_page.dart`
+pushes the loaded markets into the two section cubits via `setMarkets` (a `BlocListener`, plus a seed
+in each provider's `create` so a load that resolved early isn't missed). Sections never fetch.
+
 ## The core rule: modularity
-- **Add or swap a data source → edit ONE file** in `lib/data/sources/`, then wire it in
-  `dashboard_repository.dart`. Never put source-specific logic in the UI or cubits.
+- **Add or swap a data source → edit ONE file** in `lib/services/sources/`, then wire it in
+  `services/dashboard_repository.dart`. Never put source-specific logic in the UI or cubits.
 - **Add a market → ONE entry** in `lib/data/config/markets.dart`.
 - Every adapter returns the normalized model and fails soft (`null`/throw) so the repository falls
   through; `mock_source.dart` is the guaranteed final fallback so a tile is never blank.
@@ -89,11 +131,16 @@ is **Option 1** (desktop `.env`, no proxy) — don't tell them to start the prox
 - **Crypto** `always:true` (24/7); **Gold** `commodity:true` (24h Mon–Fri) — these flags drive the
   status + clock label. Open/closed + clocks are recomputed client-side each second.
 - **UAE headline index is intentionally mock** (Yahoo lacks `^DFMGI`); its movers are live.
-- **Not investment advice** — keep the disclaimers in the brief, takes, and news.
+- **Not investment advice** — keep the disclaimers on the takes, news and screener.
+- **The pulsing status dot builds its `AnimationController` in `initState`, never lazily** — a
+  `late final` initialiser first runs inside `dispose()` for a dot that never pulsed (a closed
+  market) and throws on a deactivated element. Keep the comment in `shared/widgets/common.dart`.
 
 ## Where to extend next (open items)
 - A real **UAE headline-index source** (movers already live).
 - **KSA / UAE news feeds** (outlets 403 a plain fetch).
+- A home for the **Morning Brief** and the **watchlist** in the new layout (both still fetched, both
+  currently unrendered; the old widgets are in git history at `lib/ui/widgets/`).
 - **Live FX** for the watchlist (currently static/approximate, display-only).
 - **FinBERT** sentiment for RSS headlines (currently neutral).
 - **Live per-market Takes** (flip the cost gate) and/or deploy the proxy for a shareable Web build.
