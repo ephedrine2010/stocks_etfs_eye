@@ -11,6 +11,7 @@ import 'home/cubit/home_cubit.dart';
 import 'home/home_page.dart';
 import 'services/dashboard_repository.dart';
 import 'services/market_hours.dart';
+import 'services/my_stocks_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,15 @@ Future<void> main() async {
   final hasDirectKey = deepSeekKey != null && deepSeekKey.isNotEmpty;
   final finnhubKey = env['FINNHUB_API_KEY'];
 
+  // The user's added stocks, restored before the first frame so a market dialog
+  // opened straight away already has them. A no-op while the store is
+  // in-memory; this is where the Firestore load lands.
+  final myStocks = MyStocksStore();
+  await myStocks.load();
+
   runApp(
     StocksEyeApp(
+      myStocks: myStocks,
       repository: DashboardRepository(
         policy: DataPolicy(
           proxyBaseUrl: AppConfig.proxyUrl,
@@ -51,12 +59,27 @@ class StocksEyeApp extends StatelessWidget {
   /// Injectable so tests can supply an offline (mock-only) repository.
   final DashboardRepository repository;
 
-  const StocksEyeApp({super.key, this.repository = const DashboardRepository()});
+  /// The user's added stocks. Injectable the same way; when omitted the app
+  /// makes its own, so a test gets a clean list without having to build one.
+  final MyStocksStore? myStocks;
+
+  const StocksEyeApp({
+    super.key,
+    this.repository = const DashboardRepository(),
+    this.myStocks,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: repository,
+    final store = myStocks;
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(value: repository),
+        if (store != null)
+          RepositoryProvider<MyStocksStore>.value(value: store)
+        else
+          RepositoryProvider<MyStocksStore>(create: (_) => MyStocksStore()),
+      ],
       child: BlocProvider(
         create: (context) =>
             HomeCubit(context.read<DashboardRepository>())..load(),

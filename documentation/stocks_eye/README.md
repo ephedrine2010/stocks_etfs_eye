@@ -11,6 +11,10 @@ Project docs for the **Stocks Eye** Flutter dashboard. Start here, then dive int
 | [04-ui-and-state.md](04-ui-and-state.md) | The four cubits, widgets, tables, responsive layout, the design system |
 | [05-running-and-config.md](05-running-and-config.md) | How to run each platform, `.env` vs proxy, the proxy server |
 
+See also **[../stock-curve-status/stocks-curve-status.md](../stock-curve-status/stocks-curve-status.md)**
+— per-instrument price curves (1D/1W/1M/3M/6M): the reusable `PriceHistoryService`, the `PriceChart`
+widget, and the one data path in the app that shows **"N.A." instead of mock**.
+
 See also **[../resources/](../resources/README.md)** — research background and detailed write-ups of
 the later enhancements (multi-agent Morning Brief, Finnhub live quotes, cross-market screener).
 

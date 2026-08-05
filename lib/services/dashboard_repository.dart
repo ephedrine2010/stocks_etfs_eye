@@ -10,6 +10,8 @@ import 'sources/mock_source.dart';
 import 'sources/rss_source.dart';
 import 'sources/yahoo_source.dart';
 import 'market_hours.dart';
+import 'my_stocks_service.dart';
+import 'price_history_service.dart';
 
 /// Assembles the full [Dashboard] from the individual sources — the Dart
 /// equivalent of the old `services/dashboard.js` aggregator, and the ONLY place
@@ -33,6 +35,14 @@ class DashboardRepository {
     this.deepSeekKey,
     this.finnhubKey,
   });
+
+  /// Price curves for any instrument, on the same policy this repository uses.
+  /// Not part of [load] — charts are fetched on demand, when a view asks.
+  PriceHistoryService get history => PriceHistoryService(policy: policy);
+
+  /// Search + live rows for user-added stocks, on the same policy. Also outside
+  /// [load]: a search runs only when the user types.
+  MyStocksService get myStocks => MyStocksService(policy: policy);
 
   /// The active AI backend for this platform/config: direct DeepSeek (desktop
   /// with a local key), the proxy, or none (→ mock).

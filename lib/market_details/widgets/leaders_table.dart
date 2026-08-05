@@ -9,17 +9,36 @@ import '../../shared/widgets/common.dart';
 
 /// Leading (heavyweight) stocks: Ticker · Company · Price · Chg · Div yield.
 /// Only shown for markets that curate a `leaders` list.
+/// Tapping a row opens that stock's price curve — but only for the symbols the
+/// parent lists in [chartable]. A row we can't chart stays inert and unmarked
+/// rather than opening a view that can only say "N.A.".
 class LeadersTable extends StatelessWidget {
   final List<Leader> leaders;
-  const LeadersTable({super.key, required this.leaders});
+  final Set<String> chartable;
+  final void Function(String symbol)? onSymbolTap;
+
+  const LeadersTable({
+    super.key,
+    required this.leaders,
+    this.chartable = const {},
+    this.onSymbolTap,
+  });
 
   static const _headers = ['Ticker', 'Company', 'Price', 'Chg', 'Div yield'];
+
+  bool _opens(int row) =>
+      onSymbolTap != null && chartable.contains(leaders[row].symbol);
 
   @override
   Widget build(BuildContext context) {
     if (leaders.isEmpty) return const SizedBox.shrink();
     return AppTable(
       rowCount: leaders.length,
+      onRowTap: onSymbolTap == null
+          ? null
+          : (row) {
+              if (_opens(row)) onSymbolTap!(leaders[row].symbol);
+            },
       columns: const [
         TableColumn(width: 80),
         TableColumn(width: 130, flex: 1),
@@ -31,7 +50,12 @@ class LeadersTable extends StatelessWidget {
       cell: (row, col) {
         final s = leaders[row];
         return switch (col) {
-          0 => Text(s.symbol, style: AppText.numCell),
+          0 => Text(
+            s.symbol,
+            style: _opens(row)
+                ? AppText.numCell.copyWith(color: AppColors.accent)
+                : AppText.numCell,
+          ),
           1 => Text(
             s.name,
             overflow: TextOverflow.ellipsis,
@@ -39,7 +63,7 @@ class LeadersTable extends StatelessWidget {
           ),
           2 => Text(Fmt.price(s.price), style: AppText.numCell),
           3 => ChangeText(s.changePct),
-          _ => _DividendCell(s.dividend),
+          _ => DividendCell(s.dividend),
         };
       },
     );
@@ -47,9 +71,10 @@ class LeadersTable extends StatelessWidget {
 }
 
 /// Gold yield %, or a muted "—" for a genuine non-payer — never a fake 0%.
-class _DividendCell extends StatelessWidget {
+/// Shared with the "My stocks" table so an added row reads identically.
+class DividendCell extends StatelessWidget {
   final Dividend? dividend;
-  const _DividendCell(this.dividend);
+  const DividendCell(this.dividend, {super.key});
 
   @override
   Widget build(BuildContext context) {

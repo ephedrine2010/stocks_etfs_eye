@@ -56,6 +56,106 @@ class CoinGeckoSource {
     );
   }
 
+  /// Timestamped USD price series for one coin over [range] — the chart feed.
+  /// CoinGecko picks the granularity from `days` on the free tier (5-minutely
+  /// for 1 day, hourly to 90 days, daily beyond), so no interval is requested.
+  /// Returns `[]` when the payload carries no prices; never a filled-in series.
+  static Future<List<PricePoint>> fetchSeries(String id, HistoryRange range) {
+    return netCache.wrap('coingecko:hist:$id:${range.name}', range.ttl, () async {
+      final res = await dio.get(
+        '$_base/coins/${Uri.encodeComponent(id)}/market_chart',
+        queryParameters: {'vs_currency': 'usd', 'days': '${range.coinDays}'},
+        options: _json,
+      );
+      final prices = res.data?['prices'];
+      if (prices is! List) return const <PricePoint>[];
+      final points = <PricePoint>[];
+      for (final row in prices) {
+        if (row is! List || row.length < 2) continue;
+        final ms = (row[0] as num?)?.toInt();
+        final px = (row[1] as num?)?.toDouble();
+        if (ms == null || px == null || !px.isFinite) continue;
+        points.add(
+          PricePoint(
+            DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true).toLocal(),
+            px,
+          ),
+        );
+      }
+      return points;
+    });
+  }
+
+  /// Coin lookup for the crypto market's "My stocks" search.
+  ///
+  /// Returns `[]` for no match AND for a failed lookup — both mean "nothing to
+  /// add". Nothing is invented here: an id that doesn't exist upstream could
+  /// never be priced or charted afterwards.
+  static Future<List<SavedStock>> search(MarketConfig market, String query) async {
+    final q = query.trim();
+    if (q.isEmpty) return const [];
+    try {
+      return await netCache.wrap(
+        'coingecko:search:${q.toLowerCase()}',
+        const Duration(minutes: 5),
+        () async {
+          final res = await dio.get(
+            '$_base/search',
+            queryParameters: {'query': q},
+            options: _json,
+          );
+          final coins = res.data?['coins'];
+          if (coins is! List) return const <SavedStock>[];
+
+          final out = <SavedStock>[];
+          for (final row in coins) {
+            if (row is! Map) continue;
+            final id = row['id'];
+            final symbol = row['symbol'];
+            if (id is! String || id.isEmpty || symbol is! String) continue;
+            final name = row['name'];
+            out.add(
+              SavedStock(
+                marketId: market.id,
+                symbol: symbol.toUpperCase(),
+                name: name is String && name.isNotEmpty ? name : symbol,
+                query: id,
+                provider: 'coingecko',
+              ),
+            );
+          }
+          return out;
+        },
+      );
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Live rows for user-added coins, in the leaders' shape so they render in
+  /// the same table as equities. `dividend` is always null — a coin pays none,
+  /// which the table already shows as "—" rather than a fake 0%.
+  static Future<List<Leader>> fetchLeaderRows(List<SavedStock> stocks) async {
+    if (stocks.isEmpty) return const [];
+    final byId = {for (final s in stocks) s.query: s};
+    final data = await _markets(byId.keys.toList());
+    final out = <Leader>[];
+    for (final d in data) {
+      final ref = byId[d['id']];
+      final price = (d['current_price'] as num?)?.toDouble();
+      if (ref == null || price == null || !price.isFinite) continue;
+      out.add(
+        Leader(
+          symbol: ref.symbol,
+          name: ref.name,
+          price: price,
+          changePct: (d['price_change_percentage_24h'] as num?)?.toDouble() ?? 0,
+        ),
+      );
+    }
+    return out;
+  }
+
   /// All coins as movers rows.
   static Future<List<Mover>> fetchCoins(MarketConfig market) async {
     if (market.coins.isEmpty) return const [];
