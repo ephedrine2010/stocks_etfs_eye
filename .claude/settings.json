@@ -56,7 +56,11 @@
       "Bash(sed -i \"s|^import '\\\\.\\\\./config/|import '../../data/config/|; s|^import '\\\\.\\\\./models/|import '../../data/models/|\" lib/services/sources/*.dart)",
       "Bash(sed -i \"s|^import '\\\\.\\\\./\\\\.\\\\./app/|import '../app/|; s|^import '\\\\.\\\\./config/|import '../data/config/|; s|^import '\\\\.\\\\./models/|import '../data/models/|; s|^import '\\\\.\\\\./sources/|import 'sources/|\" lib/services/dashboard_repository.dart)",
       "Bash(sed -i \"s|^import '\\\\.\\\\./models/|import '../data/models/|\" lib/services/market_hours.dart)",
-      "Bash(./build/windows/x64/runner/Debug/stocks_etfs_eye.exe)"
+      "Bash(./build/windows/x64/runner/Debug/stocks_etfs_eye.exe)",
+      "Bash(firebase login:list)",
+      "Bash(grep -oE \"^[A-Z_]+=.{0,6}\" .env)",
+      "Bash(firebase projects:list)",
+      "Bash(firebase auth:export \"C:/Users/ephed/AppData/Local/Temp/claude/d--mini-projects-stocks-etfs-eye/01155a08-87a6-4335-a312-e1d23ff7a91b/scratchpad/users.json\" --format=json --project stocketfseye)"
     ],
     "additionalDirectories": [
       "D:\\mini projects\\stocks_etfs_eye\\build\\windows\\x64\\extracted\\firebase_cpp_sdk_windows"

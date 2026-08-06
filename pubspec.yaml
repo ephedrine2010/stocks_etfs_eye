@@ -7,8 +7,11 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  cloud_firestore: ^6.8.0
+  crypto: ^3.0.7
   dio: ^5.10.0
   equatable: ^2.1.0
+  firebase_auth: ^6.5.7
   firebase_core: ^4.11.0
   flutter:
     sdk: flutter
@@ -20,6 +23,7 @@ dependencies:
   material_table_view: ^5.5.1
   shared_preferences: ^2.3.2
   timezone: ^0.10.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 // Barrel export for all data models.
 export 'ai.dart';
+export 'auth_user.dart';
 export 'dashboard.dart';
 export 'instruments.dart';
 export 'market.dart';

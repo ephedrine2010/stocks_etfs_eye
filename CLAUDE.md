@@ -158,9 +158,12 @@ answer to both "no match" and "lookup failed".
   plus a local mirror slot in behind the same surface, so neither the cubits nor the widgets change.
 - Live probe: `flutter test test/search_probe.dart`.
 
-> ⚠️ **The added list is session-only right now** — it resets when the app closes. Persistence is
-> built but *not wired*: `firestore.rules` requires a signed-in user and the app has no sign-in yet.
-> The plan, decisions already made, and console state are in
+> ⚠️ **Persistence is wired but its round trip has never been observed.** `MyStocksStore` now writes
+> through to Firestore `ephedrine2010/{uid}` with a per-uid `shared_preferences` mirror, and Google
+> sign-in works on Windows — but nobody has yet added a stock, restarted, and watched it come back.
+> Note both `_readRemote`/`_writeRemote` swallow their exceptions on purpose, so a real failure is
+> **silent**. Signed out, the list still works for the session and is merged upward on sign-in.
+> Remaining work, console state and hard-won gotchas:
 > [`documentation/todo/my-stocks-todo.md`](documentation/todo/my-stocks-todo.md) — **read it before
 > touching this feature**.
 
@@ -169,13 +172,20 @@ answer to both "no match" and "lookup failed".
 **fail-soft on purpose**: the dashboard is public market data and must run without it. Project
 `stocketfseye`; `firebase_core` is the only Firebase package installed so far.
 
-- **Firestore rules already require `request.auth != null`**, and nothing signs in — so any Firestore
-  call today returns `PERMISSION_DENIED`. That's the blocker for persistence, not a bug.
-- Planned: real Google sign-in, per-user doc at **`ephedrine2010/{uid}`**, gating **only** the "My
-  stocks" section — never the dashboard.
-- **`google_sign_in` has no Windows support** (the primary dev platform); Windows needs a loopback
-  OAuth + PKCE flow. `cloud_firestore` and `firebase_auth` *do* support Windows; nothing Firebase
-  supports Linux.
+- **Google sign-in works on Windows** via a hand-rolled loopback OAuth + PKCE flow
+  (`services/auth/loopback_google_flow.dart`), because `google_sign_in` has no Windows support.
+  Android/iOS/macOS/Web still have no flow — `googleAuthFlowFor()` returns `Unavailable` there and
+  the sign-in strip renders nothing rather than a dead button.
+- **The OAuth client must live in the same GCP project as Firebase** (`stocketfseye`,
+  `1049316374463`). A client from another project yields "credential is malformed or has expired",
+  which names the wrong cause entirely — see the todo doc before debugging anything else.
+- Per-user doc at **`ephedrine2010/{uid}`**, gating **only** the "My stocks" section — never the
+  dashboard. `cloud_firestore` and `firebase_auth` support Windows; nothing Firebase supports Linux.
+- ⚠️ **`firestore.rules` in the repo is not what's deployed.** The repo version isolates each uid;
+  live is still `request.auth != null` on everything. Deploy with
+  `firebase deploy --only firestore:rules`.
+- On Windows the app **segfaults at exit** (gRPC teardown timeout + FlutterFire's `firebase_auth`
+  plugin delivering events off the platform thread). Exit-only so far, after writes have gone out.
 - OAuth credentials live in `.env` (gitignored) as `GOOGLE_OAUTH_CLIENT_ID` /
   `GOOGLE_OAUTH_CLIENT_SECRET` — **never hardcode them**, same rule as the DeepSeek key.
 - Full detail: [`documentation/firebase/firebase.md`](documentation/firebase/firebase.md).
@@ -217,8 +227,9 @@ is **Option 1** (desktop `.env`, no proxy) — don't tell them to start the prox
   market) and throws on a deactivated element. Keep the comment in `shared/widgets/common.dart`.
 
 ## Where to extend next (open items)
-**In flight — start here:** persist "My stocks" to Firestore. Needs Google sign-in first (the rules
-already demand it). Stages, decisions and console state:
+**In flight — start here:** confirm the Firestore round trip for "My stocks" (add → restart → still
+there), then deploy `firestore.rules`, then `google_sign_in` for Android/iOS/macOS/Web. Remaining
+work, console state and gotchas:
 [`documentation/todo/my-stocks-todo.md`](documentation/todo/my-stocks-todo.md).
 
 - Point the details dialog's 14-point sparkline at **`HistoryTarget.index(config)`** for a real,

@@ -4,6 +4,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import '../app/format.dart';
 import '../app/theme.dart';
+import '../auth/widgets/sign_in_banner.dart';
 import '../data/models/models.dart';
 import '../services/dashboard_repository.dart';
 import '../services/my_stocks_store.dart';
@@ -317,6 +318,7 @@ class _MyStocksSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.xs + 2),
+        const SignInBanner(),
         if (mine.isEmpty)
           EmptyState(
             icon: TablerIcons.list_search,
